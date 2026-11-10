@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0 (2026-11-11)
+
+- Privacy mode: the camera shows a large crossed-out camera instead of a black or frozen picture; the live stream stops and comes back when privacy mode is turned off. The camera entity stays on, with a `privacy_mode` attribute
+- Stills taken from the running stream only when the stream integration is loaded; otherwise one shared FFmpeg snapshot
+
 ## 1.0.0 (2026-11-11)
 
 First release.

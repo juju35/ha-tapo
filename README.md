@@ -17,6 +17,7 @@ Home Assistant integration for TP-Link Tapo cameras, fully local: live stream, p
 ## Features
 
 - **One camera entity** per camera, with a **Stream quality** select (HD or SD) that switches the running stream; turning the camera off turns privacy mode on
+- **Privacy mode shown**: the camera displays a large crossed-out camera instead of a black or frozen picture, and its live stream stops until privacy mode is turned off
 - **Detection sensors created at setup**, for every detection the camera supports (motion, person, vehicle, pet, line crossing, tamper, baby crying, barking, meowing, glass break, package), before any event happens; a detection the camera reports and this integration doesn't know yet gets a sensor too
 - **Events that survive reboots**: the camera's ONVIF event subscription is renewed before it expires and created again, with a backoff, when the camera drops it; a **Detection events** sensor shows whether the subscription is up
 - **Safety timeout**: a detection still on after 60 s without news (configurable) is switched off, for firmwares that never send the end of an event
@@ -95,7 +96,7 @@ The camera entity is named after the camera; the others are named after what the
 
 | Entity | Notes |
 |---|---|
-| `camera.<name>` | Stream in the quality of `select.<name>_stream_quality`; on/off = privacy mode; attribute `stream_quality` |
+| `camera.<name>` | Stream in the quality of `select.<name>_stream_quality`; turn on/off = privacy mode; in privacy mode, no live stream and a crossed-out camera as picture; attributes `stream_quality`, `privacy_mode` |
 | `binary_sensor.<name>_motion`, `_person`, `_vehicle`… | From the event subscription; unavailable only while it is down; attribute `last_change` |
 | `binary_sensor.<name>_detection_events` | Subscription state; attributes `last_error`, `messages` |
 | `select.<name>_<type>_detection` | `off`, `low`, `normal`, `high` |

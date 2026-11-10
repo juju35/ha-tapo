@@ -5,13 +5,11 @@ from __future__ import annotations
 import asyncio
 import time
 from datetime import timedelta
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
-import pytest
 from homeassistant.components.camera import async_get_stream_source
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant, State
-from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import entity_registry as er
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant_custom_component.common import MockConfigEntry, async_fire_time_changed, mock_restore_cache
@@ -93,9 +91,46 @@ async def test_switch_applies_at_once(hass: HomeAssistant, loaded: MockConfigEnt
     camera.tapo.setPrivacyMode.assert_called_once_with(True)
     # Shown before the confirming refresh, which would still report the old value here.
     assert hass.states.get(entity_id).state == "on"
-    # The camera is off while privacy mode is on: no stream.
-    with pytest.raises(HomeAssistantError, match="off"):
-        await async_get_stream_source(hass, _entity_id(hass, "camera", "camera"))
+    # No live stream in privacy mode.
+    assert await async_get_stream_source(hass, _entity_id(hass, "camera", "camera")) is None
+
+
+async def test_privacy_mode_image(hass: HomeAssistant, loaded: MockConfigEntry, camera: FakeCamera) -> None:
+    """In privacy mode the camera shows a crossed-out camera, without live stream; back to video after."""
+    from homeassistant.components.camera import CameraEntityFeature, async_get_image
+
+    from custom_components.tapo_cameras.camera import PRIVACY_IMAGE
+
+    camera_id = _entity_id(hass, "camera", "camera")
+    assert hass.states.get(camera_id).attributes["supported_features"] & CameraEntityFeature.STREAM
+    entity = next(e for e in hass.data["camera"].entities if e.entity_id == camera_id)
+    stream = entity.stream = MagicMock()
+    stream.stop = AsyncMock()
+
+    privacy = _entity_id(hass, "switch", "privacy_mode")
+    await hass.services.async_call("switch", "turn_on", {"entity_id": privacy}, blocking=True)
+    state = hass.states.get(camera_id)
+    assert not state.attributes["supported_features"] & CameraEntityFeature.STREAM
+    assert state.attributes["privacy_mode"] is True
+    stream.stop.assert_awaited_once()
+    assert entity.stream is None
+    with patch("custom_components.tapo_cameras.camera.async_get_image") as ffmpeg:
+        image = await async_get_image(hass, camera_id)
+    ffmpeg.assert_not_called()
+    assert image.content == PRIVACY_IMAGE.read_bytes()
+
+    # The camera entity's own off/on is the privacy mode too.
+    await hass.services.async_call("camera", "turn_on", {"entity_id": camera_id}, blocking=True)
+    camera.tapo.setPrivacyMode.assert_called_with(False)
+    assert hass.states.get(camera_id).attributes["supported_features"] & CameraEntityFeature.STREAM
+    assert await async_get_stream_source(hass, camera_id) == "rtsp://camuser:cam-secret@192.168.1.15:554/stream1"
+
+
+async def test_stills_from_the_stream(hass: HomeAssistant, loaded: MockConfigEntry) -> None:
+    entity = next(e for e in hass.data["camera"].entities if e.entity_id == _entity_id(hass, "camera", "camera"))
+    assert not entity.use_stream_for_stills  # no stream integration in this test
+    hass.config.components.add("stream")
+    assert entity.use_stream_for_stills
 
 
 async def test_detection_select(hass: HomeAssistant, loaded: MockConfigEntry, camera: FakeCamera) -> None:
