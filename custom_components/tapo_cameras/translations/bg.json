@@ -1,0 +1,451 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Камера Tapo",
+        "description": "В приложението Tapo включете Съвместимост с трети страни (в раздел Аз), след това създайте акаунт на камерата в разширените настройки на камерата.",
+        "data": {
+          "host": "Хост",
+          "cloud_password": "Парола на акаунта в Tapo",
+          "username": "Потребителско име на акаунта на камерата",
+          "password": "Парола на акаунта на камерата",
+          "control_port": "Порт за управление"
+        },
+        "data_description": {
+          "host": "IP адрес на камерата. Задайте ѝ фиксиран адрес в рутера.",
+          "cloud_password": "Парола на акаунта в TP-Link, към който е добавена камерата; използва се за настройките ѝ.",
+          "username": "Акаунт на камерата за видео потоците и събитията за откриване.",
+          "password": "Парола на акаунта на камерата.",
+          "control_port": "443 за камери и звънци."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Повторно влизане",
+        "description": "Камерата {host} отхвърли данните за вход.",
+        "data": {
+          "cloud_password": "Парола на акаунта в Tapo",
+          "username": "Потребителско име на акаунта на камерата",
+          "password": "Парола на акаунта на камерата"
+        }
+      },
+      "reconfigure": {
+        "title": "Камера Tapo",
+        "data": {
+          "host": "Хост",
+          "cloud_password": "Парола на акаунта в Tapo",
+          "username": "Потребителско име на акаунта на камерата",
+          "password": "Парола на акаунта на камерата",
+          "control_port": "Порт за управление"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Грешна парола. Използвайте паролата на акаунта в Tapo и проверете дали Съвместимостта с трети страни е включена.",
+      "suspended": "След твърде много неуспешни опити камерата блокира влизането за известно време. Опитайте отново след няколко минути.",
+      "cannot_connect": "Камерата не отговори. Проверете адреса ѝ и дали портовете 443, 554 и 2020 са достъпни."
+    },
+    "abort": {
+      "already_configured": "Тази камера вече е конфигурирана.",
+      "reauth_successful": "Влизането е извършено отново.",
+      "reconfigure_successful": "Камерата е обновена.",
+      "wrong_camera": "Този адрес принадлежи на друга камера."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Опции на камерата Tapo",
+        "data": {
+          "scan_interval": "Интервал на обновяване (с)",
+          "onvif_events": "Събития за откриване",
+          "motion_timeout": "Защитно време за откриванията (с)",
+          "rtsp_transport": "Транспорт RTSP",
+          "extra_ffmpeg_arguments": "Допълнителни аргументи на FFmpeg за моментни снимки"
+        },
+        "data_description": {
+          "scan_interval": "Колко често се четат настройките. Откриванията се изпращат от камерата, независимо от този интервал.",
+          "onvif_events": "Сензори за движение, човек, превозно средство… от събитията ONVIF на камерата (порт 2020).",
+          "motion_timeout": "Откриване без новини за толкова време се изключва. 0 — да остане активно, докато камерата не го прекрати.",
+          "rtsp_transport": "TCP е най-надеждният.",
+          "extra_ffmpeg_arguments": "Добавят се към командата на FFmpeg, която прави моментните снимки."
+        }
+      }
+    }
+  },
+  "selector": {
+    "rtsp_transport": {
+      "options": {
+        "tcp": "TCP",
+        "udp": "UDP",
+        "udp_multicast": "UDP multicast",
+        "http": "HTTP"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "event_subscription": {
+        "name": "Събития за откриване"
+      },
+      "motion": {
+        "name": "Движение"
+      },
+      "person": {
+        "name": "Човек"
+      },
+      "vehicle": {
+        "name": "Превозно средство"
+      },
+      "pet": {
+        "name": "Домашен любимец"
+      },
+      "line_crossing": {
+        "name": "Пресичане на линия"
+      },
+      "tamper": {
+        "name": "Намеса"
+      },
+      "baby_cry": {
+        "name": "Плач на бебе"
+      },
+      "bark": {
+        "name": "Лай"
+      },
+      "meow": {
+        "name": "Мяукане"
+      },
+      "glass_break": {
+        "name": "Счупване на стъкло"
+      },
+      "package": {
+        "name": "Пратка"
+      },
+      "area_intrusion": {
+        "name": "Проникване в зона"
+      },
+      "detection": {
+        "name": "Откриване {type}"
+      }
+    },
+    "button": {
+      "move_up": {
+        "name": "Нагоре"
+      },
+      "move_down": {
+        "name": "Надолу"
+      },
+      "move_left": {
+        "name": "Наляво"
+      },
+      "move_right": {
+        "name": "Надясно"
+      },
+      "calibrate": {
+        "name": "Калибриране"
+      },
+      "format_sd_card": {
+        "name": "Форматиране на SD картата"
+      }
+    },
+    "light": {
+      "spotlight": {
+        "name": "Прожектор"
+      },
+      "floodlight": {
+        "name": "Осветителен прожектор"
+      }
+    },
+    "number": {
+      "speaker_volume": {
+        "name": "Сила на звука на високоговорителя"
+      },
+      "microphone_volume": {
+        "name": "Сила на звука на микрофона"
+      },
+      "motion_sensitivity": {
+        "name": "Чувствителност на движението"
+      },
+      "spotlight_intensity": {
+        "name": "Интензитет на прожектора"
+      },
+      "move_angle": {
+        "name": "Стъпка на движение"
+      }
+    },
+    "select": {
+      "motion_detection": {
+        "name": "Откриване на движение",
+        "state": {
+          "off": "Изкл.",
+          "low": "Ниска",
+          "normal": "Нормална",
+          "high": "Висока"
+        }
+      },
+      "person_detection": {
+        "name": "Откриване на хора",
+        "state": {
+          "off": "Изкл.",
+          "low": "Ниска",
+          "normal": "Нормална",
+          "high": "Висока"
+        }
+      },
+      "vehicle_detection": {
+        "name": "Откриване на превозни средства",
+        "state": {
+          "off": "Изкл.",
+          "low": "Ниска",
+          "normal": "Нормална",
+          "high": "Висока"
+        }
+      },
+      "pet_detection": {
+        "name": "Откриване на домашни любимци",
+        "state": {
+          "off": "Изкл.",
+          "low": "Ниска",
+          "normal": "Нормална",
+          "high": "Висока"
+        }
+      },
+      "package_detection": {
+        "name": "Откриване на пратки",
+        "state": {
+          "off": "Изкл.",
+          "low": "Ниска",
+          "normal": "Нормална",
+          "high": "Висока"
+        }
+      },
+      "baby_cry_detection": {
+        "name": "Откриване на плач на бебе",
+        "state": {
+          "off": "Изкл.",
+          "low": "Ниска",
+          "normal": "Нормална",
+          "high": "Висока"
+        }
+      },
+      "bark_detection": {
+        "name": "Откриване на лай",
+        "state": {
+          "off": "Изкл.",
+          "low": "Ниска",
+          "normal": "Нормална",
+          "high": "Висока"
+        }
+      },
+      "meow_detection": {
+        "name": "Откриване на мяукане",
+        "state": {
+          "off": "Изкл.",
+          "low": "Ниска",
+          "normal": "Нормална",
+          "high": "Висока"
+        }
+      },
+      "glass_break_detection": {
+        "name": "Откриване на счупване на стъкло",
+        "state": {
+          "off": "Изкл.",
+          "low": "Ниска",
+          "normal": "Нормална",
+          "high": "Висока"
+        }
+      },
+      "tamper_detection": {
+        "name": "Откриване на намеса",
+        "state": {
+          "off": "Изкл.",
+          "low": "Ниска",
+          "normal": "Нормална",
+          "high": "Висока"
+        }
+      },
+      "night_vision": {
+        "name": "Нощно виждане",
+        "state": {
+          "inf_night_vision": "Инфрачервено",
+          "wtl_night_vision": "Пълен цвят",
+          "md_night_vision": "Интелигентно",
+          "dbl_night_vision": "Двойна светлина"
+        }
+      },
+      "day_night_mode": {
+        "name": "Режим ден/нощ",
+        "state": {
+          "auto": "Авто",
+          "on": "Нощ",
+          "off": "Ден"
+        }
+      },
+      "light_frequency": {
+        "name": "Честота на светлината",
+        "state": {
+          "auto": "Авто",
+          "50": "50 Hz",
+          "60": "60 Hz"
+        }
+      },
+      "preset": {
+        "name": "Предварителна позиция"
+      },
+      "stream_quality": {
+        "name": "Качество на потока",
+        "state": {
+          "hd": "HD",
+          "sd": "SD"
+        }
+      }
+    },
+    "sensor": {
+      "ssid": {
+        "name": "Wi-Fi мрежа"
+      },
+      "link_type": {
+        "name": "Тип връзка"
+      },
+      "ip_address": {
+        "name": "IP адрес"
+      },
+      "sd_card_status": {
+        "name": "Състояние на SD картата"
+      },
+      "sd_card_free_space": {
+        "name": "Свободно място на SD картата"
+      },
+      "sd_card_total_space": {
+        "name": "Размер на SD картата"
+      }
+    },
+    "siren": {
+      "siren": {
+        "name": "Аларма"
+      }
+    },
+    "switch": {
+      "privacy_mode": {
+        "name": "Режим на поверителност"
+      },
+      "indicator_led": {
+        "name": "LED за състояние"
+      },
+      "notifications": {
+        "name": "Известия"
+      },
+      "rich_notifications": {
+        "name": "Разширени известия"
+      },
+      "record_audio": {
+        "name": "Запис на звук"
+      },
+      "microphone_mute": {
+        "name": "Заглушен микрофон"
+      },
+      "noise_cancelling": {
+        "name": "Потискане на шума"
+      },
+      "lens_distortion_correction": {
+        "name": "Корекция на изкривяването на обектива"
+      },
+      "flip": {
+        "name": "Обръщане на изображението"
+      },
+      "auto_track": {
+        "name": "Автоматично проследяване"
+      },
+      "privacy_zones": {
+        "name": "Зони за поверителност"
+      },
+      "record_to_sd_card": {
+        "name": "Запис на SD картата"
+      },
+      "circular_recording": {
+        "name": "Циклично записване"
+      },
+      "line_crossing_detection": {
+        "name": "Откриване на пресичане на линия"
+      },
+      "automatic_reboot": {
+        "name": "Планирано рестартиране"
+      },
+      "automatic_firmware_upgrade": {
+        "name": "Автоматично обновяване на фърмуера"
+      },
+      "diagnose_mode": {
+        "name": "Диагностичен режим"
+      },
+      "smart_track": {
+        "name": "Интелигентно проследяване {type}"
+      },
+      "alarm_trigger": {
+        "name": "Аларма при {type}"
+      }
+    }
+  },
+  "exceptions": {
+    "invalid_auth": {
+      "message": "Камерата {host} отхвърли данните за вход."
+    },
+    "suspended": {
+      "message": "Камерата {host} блокира влизането за {seconds} с след твърде много неуспешни опити."
+    },
+    "cannot_connect": {
+      "message": "Камерата {host} не отговори: {error}"
+    },
+    "privacy_mode": {
+      "message": "Невъзможно, докато режимът на поверителност е включен."
+    },
+    "command_failed": {
+      "message": "Камерата {host} отхвърли промяната: {error}"
+    }
+  },
+  "services": {
+    "ptz": {
+      "name": "Завъртане и накланяне",
+      "description": "Завърта камерата на зададените ъгли от текущата ѝ позиция.",
+      "fields": {
+        "pan": {
+          "name": "Завъртане",
+          "description": "Градуси надясно (отрицателни: наляво)."
+        },
+        "tilt": {
+          "name": "Накланяне",
+          "description": "Градуси нагоре (отрицателни: надолу)."
+        }
+      }
+    },
+    "go_to_preset": {
+      "name": "Към предварителна позиция",
+      "description": "Премества камерата в запазена позиция.",
+      "fields": {
+        "preset": {
+          "name": "Предварителна позиция",
+          "description": "Име или ID на позицията."
+        }
+      }
+    },
+    "save_preset": {
+      "name": "Запазване на позиция",
+      "description": "Запазва текущата позиция на камерата.",
+      "fields": {
+        "name": {
+          "name": "Име",
+          "description": "Име на новата позиция."
+        }
+      }
+    },
+    "delete_preset": {
+      "name": "Изтриване на позиция",
+      "description": "Изтрива запазена позиция.",
+      "fields": {
+        "preset": {
+          "name": "Предварителна позиция",
+          "description": "Име или ID на позицията."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,451 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Tapo kamera",
+        "description": "Lietotnē Tapo ieslēdziet Trešo pušu saderību (sadaļā Es), pēc tam kameras papildu iestatījumos izveidojiet kameras kontu.",
+        "data": {
+          "host": "Resursdators",
+          "cloud_password": "Tapo konta parole",
+          "username": "Kameras konta lietotājvārds",
+          "password": "Kameras konta parole",
+          "control_port": "Vadības ports"
+        },
+        "data_description": {
+          "host": "Kameras IP adrese. Piešķiriet tai fiksētu adresi maršrutētājā.",
+          "cloud_password": "TP-Link konta, kuram pievienota kamera, parole, ko izmanto tās iestatījumiem.",
+          "username": "Kameras konts, ko izmanto video straumēm un noteikšanas notikumiem.",
+          "password": "Kameras konta parole.",
+          "control_port": "443 kamerām un durvju zvaniem."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Pierakstīties vēlreiz",
+        "description": "Kamera {host} noraidīja akreditācijas datus.",
+        "data": {
+          "cloud_password": "Tapo konta parole",
+          "username": "Kameras konta lietotājvārds",
+          "password": "Kameras konta parole"
+        }
+      },
+      "reconfigure": {
+        "title": "Tapo kamera",
+        "data": {
+          "host": "Resursdators",
+          "cloud_password": "Tapo konta parole",
+          "username": "Kameras konta lietotājvārds",
+          "password": "Kameras konta parole",
+          "control_port": "Vadības ports"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Nepareiza parole. Izmantojiet Tapo konta paroli un pārbaudiet, vai Trešo pušu saderība ir ieslēgta.",
+      "suspended": "Pēc pārāk daudzām neveiksmēm kamera kādu laiku bloķē pierakstīšanos. Mēģiniet vēlreiz pēc dažām minūtēm.",
+      "cannot_connect": "Kamera neatbildēja. Pārbaudiet tās adresi un vai porti 443, 554 un 2020 ir sasniedzami."
+    },
+    "abort": {
+      "already_configured": "Šī kamera jau ir konfigurēta.",
+      "reauth_successful": "Atkārtoti pierakstījies.",
+      "reconfigure_successful": "Kamera atjaunināta.",
+      "wrong_camera": "Šī adrese pieder citai kamerai."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Tapo kameras opcijas",
+        "data": {
+          "scan_interval": "Atsvaidzināšanas intervāls (s)",
+          "onvif_events": "Noteikšanas notikumi",
+          "motion_timeout": "Noteikšanu drošības noildze (s)",
+          "rtsp_transport": "RTSP transports",
+          "extra_ffmpeg_arguments": "Papildu FFmpeg argumenti momentuzņēmumiem"
+        },
+        "data_description": {
+          "scan_interval": "Cik bieži tiek nolasīti iestatījumi. Noteikšanas sūta kamera neatkarīgi no šī intervāla.",
+          "onvif_events": "Kustības, personas, transportlīdzekļa… sensori no kameras ONVIF notikumiem (ports 2020).",
+          "motion_timeout": "Noteikšana bez jaunumiem tik ilgi tiek izslēgta. 0, lai tā paliktu aktīva, līdz kamera to beidz.",
+          "rtsp_transport": "TCP ir visuzticamākais.",
+          "extra_ffmpeg_arguments": "Tiek pievienoti FFmpeg komandai, kas uzņem momentuzņēmumus."
+        }
+      }
+    }
+  },
+  "selector": {
+    "rtsp_transport": {
+      "options": {
+        "tcp": "TCP",
+        "udp": "UDP",
+        "udp_multicast": "UDP multiraide",
+        "http": "HTTP"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "event_subscription": {
+        "name": "Noteikšanas notikumi"
+      },
+      "motion": {
+        "name": "Kustība"
+      },
+      "person": {
+        "name": "Persona"
+      },
+      "vehicle": {
+        "name": "Transportlīdzeklis"
+      },
+      "pet": {
+        "name": "Mājdzīvnieks"
+      },
+      "line_crossing": {
+        "name": "Līnijas šķērsošana"
+      },
+      "tamper": {
+        "name": "Sabotāža"
+      },
+      "baby_cry": {
+        "name": "Bērna raudāšana"
+      },
+      "bark": {
+        "name": "Riešana"
+      },
+      "meow": {
+        "name": "Ņaudēšana"
+      },
+      "glass_break": {
+        "name": "Stikla plīšana"
+      },
+      "package": {
+        "name": "Paka"
+      },
+      "area_intrusion": {
+        "name": "Iekļūšana zonā"
+      },
+      "detection": {
+        "name": "Noteikšana {type}"
+      }
+    },
+    "button": {
+      "move_up": {
+        "name": "Uz augšu"
+      },
+      "move_down": {
+        "name": "Uz leju"
+      },
+      "move_left": {
+        "name": "Pa kreisi"
+      },
+      "move_right": {
+        "name": "Pa labi"
+      },
+      "calibrate": {
+        "name": "Kalibrēt"
+      },
+      "format_sd_card": {
+        "name": "Formatēt SD karti"
+      }
+    },
+    "light": {
+      "spotlight": {
+        "name": "Prožektors"
+      },
+      "floodlight": {
+        "name": "Starmetis"
+      }
+    },
+    "number": {
+      "speaker_volume": {
+        "name": "Skaļruņa skaļums"
+      },
+      "microphone_volume": {
+        "name": "Mikrofona skaļums"
+      },
+      "motion_sensitivity": {
+        "name": "Kustības jutība"
+      },
+      "spotlight_intensity": {
+        "name": "Prožektora intensitāte"
+      },
+      "move_angle": {
+        "name": "Pārvietošanas solis"
+      }
+    },
+    "select": {
+      "motion_detection": {
+        "name": "Kustības noteikšana",
+        "state": {
+          "off": "Izslēgta",
+          "low": "Zema",
+          "normal": "Normāla",
+          "high": "Augsta"
+        }
+      },
+      "person_detection": {
+        "name": "Personu noteikšana",
+        "state": {
+          "off": "Izslēgta",
+          "low": "Zema",
+          "normal": "Normāla",
+          "high": "Augsta"
+        }
+      },
+      "vehicle_detection": {
+        "name": "Transportlīdzekļu noteikšana",
+        "state": {
+          "off": "Izslēgta",
+          "low": "Zema",
+          "normal": "Normāla",
+          "high": "Augsta"
+        }
+      },
+      "pet_detection": {
+        "name": "Mājdzīvnieku noteikšana",
+        "state": {
+          "off": "Izslēgta",
+          "low": "Zema",
+          "normal": "Normāla",
+          "high": "Augsta"
+        }
+      },
+      "package_detection": {
+        "name": "Paku noteikšana",
+        "state": {
+          "off": "Izslēgta",
+          "low": "Zema",
+          "normal": "Normāla",
+          "high": "Augsta"
+        }
+      },
+      "baby_cry_detection": {
+        "name": "Bērna raudāšanas noteikšana",
+        "state": {
+          "off": "Izslēgta",
+          "low": "Zema",
+          "normal": "Normāla",
+          "high": "Augsta"
+        }
+      },
+      "bark_detection": {
+        "name": "Riešanas noteikšana",
+        "state": {
+          "off": "Izslēgta",
+          "low": "Zema",
+          "normal": "Normāla",
+          "high": "Augsta"
+        }
+      },
+      "meow_detection": {
+        "name": "Ņaudēšanas noteikšana",
+        "state": {
+          "off": "Izslēgta",
+          "low": "Zema",
+          "normal": "Normāla",
+          "high": "Augsta"
+        }
+      },
+      "glass_break_detection": {
+        "name": "Stikla plīšanas noteikšana",
+        "state": {
+          "off": "Izslēgta",
+          "low": "Zema",
+          "normal": "Normāla",
+          "high": "Augsta"
+        }
+      },
+      "tamper_detection": {
+        "name": "Sabotāžas noteikšana",
+        "state": {
+          "off": "Izslēgta",
+          "low": "Zema",
+          "normal": "Normāla",
+          "high": "Augsta"
+        }
+      },
+      "night_vision": {
+        "name": "Nakts redzamība",
+        "state": {
+          "inf_night_vision": "Infrasarkanā",
+          "wtl_night_vision": "Pilnkrāsu",
+          "md_night_vision": "Viedā",
+          "dbl_night_vision": "Dubultā gaisma"
+        }
+      },
+      "day_night_mode": {
+        "name": "Dienas/nakts režīms",
+        "state": {
+          "auto": "Automātiski",
+          "on": "Nakts",
+          "off": "Diena"
+        }
+      },
+      "light_frequency": {
+        "name": "Gaismas frekvence",
+        "state": {
+          "auto": "Automātiski",
+          "50": "50 Hz",
+          "60": "60 Hz"
+        }
+      },
+      "preset": {
+        "name": "Iepriekšiestatījums"
+      },
+      "stream_quality": {
+        "name": "Straumes kvalitāte",
+        "state": {
+          "hd": "HD",
+          "sd": "SD"
+        }
+      }
+    },
+    "sensor": {
+      "ssid": {
+        "name": "Wi-Fi tīkls"
+      },
+      "link_type": {
+        "name": "Savienojuma veids"
+      },
+      "ip_address": {
+        "name": "IP adrese"
+      },
+      "sd_card_status": {
+        "name": "SD kartes statuss"
+      },
+      "sd_card_free_space": {
+        "name": "Brīvā vieta SD kartē"
+      },
+      "sd_card_total_space": {
+        "name": "SD kartes izmērs"
+      }
+    },
+    "siren": {
+      "siren": {
+        "name": "Trauksme"
+      }
+    },
+    "switch": {
+      "privacy_mode": {
+        "name": "Privātuma režīms"
+      },
+      "indicator_led": {
+        "name": "Statusa LED"
+      },
+      "notifications": {
+        "name": "Paziņojumi"
+      },
+      "rich_notifications": {
+        "name": "Paplašināti paziņojumi"
+      },
+      "record_audio": {
+        "name": "Ierakstīt audio"
+      },
+      "microphone_mute": {
+        "name": "Mikrofons izslēgts"
+      },
+      "noise_cancelling": {
+        "name": "Trokšņu slāpēšana"
+      },
+      "lens_distortion_correction": {
+        "name": "Objektīva kropļojumu korekcija"
+      },
+      "flip": {
+        "name": "Apgriezt attēlu"
+      },
+      "auto_track": {
+        "name": "Automātiska izsekošana"
+      },
+      "privacy_zones": {
+        "name": "Privātuma zonas"
+      },
+      "record_to_sd_card": {
+        "name": "Ierakstīt SD kartē"
+      },
+      "circular_recording": {
+        "name": "Cikliska ierakstīšana"
+      },
+      "line_crossing_detection": {
+        "name": "Līnijas šķērsošanas noteikšana"
+      },
+      "automatic_reboot": {
+        "name": "Ieplānota restartēšana"
+      },
+      "automatic_firmware_upgrade": {
+        "name": "Automātiska programmaparatūras atjaunināšana"
+      },
+      "diagnose_mode": {
+        "name": "Diagnostikas režīms"
+      },
+      "smart_track": {
+        "name": "Vieda izsekošana {type}"
+      },
+      "alarm_trigger": {
+        "name": "Trauksme pie {type}"
+      }
+    }
+  },
+  "exceptions": {
+    "invalid_auth": {
+      "message": "Kamera {host} noraidīja akreditācijas datus."
+    },
+    "suspended": {
+      "message": "Kamera {host} pēc pārāk daudzām neveiksmēm bloķē pierakstīšanos uz {seconds} s."
+    },
+    "cannot_connect": {
+      "message": "Kamera {host} neatbildēja: {error}"
+    },
+    "privacy_mode": {
+      "message": "Nav iespējams, kamēr ieslēgts privātuma režīms."
+    },
+    "command_failed": {
+      "message": "Kamera {host} noraidīja izmaiņas: {error}"
+    }
+  },
+  "services": {
+    "ptz": {
+      "name": "Pagriešana un noliekšana",
+      "description": "Pagriež kameru par norādītajiem leņķiem no tās pašreizējās pozīcijas.",
+      "fields": {
+        "pan": {
+          "name": "Pagriešana",
+          "description": "Grādi pa labi (negatīvi: pa kreisi)."
+        },
+        "tilt": {
+          "name": "Noliekšana",
+          "description": "Grādi uz augšu (negatīvi: uz leju)."
+        }
+      }
+    },
+    "go_to_preset": {
+      "name": "Doties uz iepriekšiestatījumu",
+      "description": "Pārvieto kameru uz saglabātu pozīciju.",
+      "fields": {
+        "preset": {
+          "name": "Iepriekšiestatījums",
+          "description": "Iepriekšiestatījuma nosaukums vai ID."
+        }
+      }
+    },
+    "save_preset": {
+      "name": "Saglabāt iepriekšiestatījumu",
+      "description": "Saglabā kameras pašreizējo pozīciju.",
+      "fields": {
+        "name": {
+          "name": "Nosaukums",
+          "description": "Jaunā iepriekšiestatījuma nosaukums."
+        }
+      }
+    },
+    "delete_preset": {
+      "name": "Dzēst iepriekšiestatījumu",
+      "description": "Dzēš saglabātu pozīciju.",
+      "fields": {
+        "preset": {
+          "name": "Iepriekšiestatījums",
+          "description": "Iepriekšiestatījuma nosaukums vai ID."
+        }
+      }
+    }
+  }
+}

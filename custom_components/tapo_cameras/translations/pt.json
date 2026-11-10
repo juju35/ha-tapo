@@ -1,0 +1,451 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Câmara Tapo",
+        "description": "Na app Tapo, ative a Compatibilidade com terceiros (em Eu) e depois crie uma conta de câmara nas Definições avançadas da câmara.",
+        "data": {
+          "host": "Anfitrião",
+          "cloud_password": "Palavra-passe da conta Tapo",
+          "username": "Nome de utilizador da conta de câmara",
+          "password": "Palavra-passe da conta de câmara",
+          "control_port": "Porta de controlo"
+        },
+        "data_description": {
+          "host": "Endereço IP da câmara. Atribua-lhe um endereço fixo no router.",
+          "cloud_password": "Palavra-passe da conta TP-Link à qual a câmara está associada, usada para as suas definições.",
+          "username": "Conta de câmara, usada para as transmissões de vídeo e os eventos de deteção.",
+          "password": "Palavra-passe da conta de câmara.",
+          "control_port": "443 para câmaras e campainhas."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Iniciar sessão novamente",
+        "description": "A câmara {host} recusou as credenciais.",
+        "data": {
+          "cloud_password": "Palavra-passe da conta Tapo",
+          "username": "Nome de utilizador da conta de câmara",
+          "password": "Palavra-passe da conta de câmara"
+        }
+      },
+      "reconfigure": {
+        "title": "Câmara Tapo",
+        "data": {
+          "host": "Anfitrião",
+          "cloud_password": "Palavra-passe da conta Tapo",
+          "username": "Nome de utilizador da conta de câmara",
+          "password": "Palavra-passe da conta de câmara",
+          "control_port": "Porta de controlo"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Palavra-passe incorreta. Use a palavra-passe da conta Tapo e verifique se a Compatibilidade com terceiros está ativada.",
+      "suspended": "A câmara bloqueia os inícios de sessão durante algum tempo após demasiadas falhas. Tente novamente dentro de alguns minutos.",
+      "cannot_connect": "A câmara não respondeu. Verifique o endereço e se as portas 443, 554 e 2020 estão acessíveis."
+    },
+    "abort": {
+      "already_configured": "Esta câmara já está configurada.",
+      "reauth_successful": "Sessão iniciada novamente.",
+      "reconfigure_successful": "Câmara atualizada.",
+      "wrong_camera": "Este endereço pertence a outra câmara."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opções da câmara Tapo",
+        "data": {
+          "scan_interval": "Intervalo de atualização (s)",
+          "onvif_events": "Eventos de deteção",
+          "motion_timeout": "Tempo limite de segurança das deteções (s)",
+          "rtsp_transport": "Transporte RTSP",
+          "extra_ffmpeg_arguments": "Argumentos FFmpeg adicionais para as capturas"
+        },
+        "data_description": {
+          "scan_interval": "Frequência de leitura das definições. As deteções são enviadas pela câmara, independentemente deste intervalo.",
+          "onvif_events": "Sensores de movimento, pessoa, veículo… a partir dos eventos ONVIF da câmara (porta 2020).",
+          "motion_timeout": "Uma deteção sem novidades durante este tempo é desligada. 0 para a manter ativa até a câmara a terminar.",
+          "rtsp_transport": "TCP é o mais fiável.",
+          "extra_ffmpeg_arguments": "Acrescentados ao comando FFmpeg que tira as capturas."
+        }
+      }
+    }
+  },
+  "selector": {
+    "rtsp_transport": {
+      "options": {
+        "tcp": "TCP",
+        "udp": "UDP",
+        "udp_multicast": "UDP multicast",
+        "http": "HTTP"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "event_subscription": {
+        "name": "Eventos de deteção"
+      },
+      "motion": {
+        "name": "Movimento"
+      },
+      "person": {
+        "name": "Pessoa"
+      },
+      "vehicle": {
+        "name": "Veículo"
+      },
+      "pet": {
+        "name": "Animal de estimação"
+      },
+      "line_crossing": {
+        "name": "Cruzamento de linha"
+      },
+      "tamper": {
+        "name": "Sabotagem"
+      },
+      "baby_cry": {
+        "name": "Choro de bebé"
+      },
+      "bark": {
+        "name": "Latidos"
+      },
+      "meow": {
+        "name": "Miados"
+      },
+      "glass_break": {
+        "name": "Quebra de vidro"
+      },
+      "package": {
+        "name": "Encomenda"
+      },
+      "area_intrusion": {
+        "name": "Intrusão em zona"
+      },
+      "detection": {
+        "name": "Deteção {type}"
+      }
+    },
+    "button": {
+      "move_up": {
+        "name": "Mover para cima"
+      },
+      "move_down": {
+        "name": "Mover para baixo"
+      },
+      "move_left": {
+        "name": "Mover para a esquerda"
+      },
+      "move_right": {
+        "name": "Mover para a direita"
+      },
+      "calibrate": {
+        "name": "Calibrar"
+      },
+      "format_sd_card": {
+        "name": "Formatar cartão SD"
+      }
+    },
+    "light": {
+      "spotlight": {
+        "name": "Holofote"
+      },
+      "floodlight": {
+        "name": "Projetor"
+      }
+    },
+    "number": {
+      "speaker_volume": {
+        "name": "Volume do altifalante"
+      },
+      "microphone_volume": {
+        "name": "Volume do microfone"
+      },
+      "motion_sensitivity": {
+        "name": "Sensibilidade ao movimento"
+      },
+      "spotlight_intensity": {
+        "name": "Intensidade do holofote"
+      },
+      "move_angle": {
+        "name": "Passo de movimento"
+      }
+    },
+    "select": {
+      "motion_detection": {
+        "name": "Deteção de movimento",
+        "state": {
+          "off": "Desligada",
+          "low": "Baixa",
+          "normal": "Normal",
+          "high": "Alta"
+        }
+      },
+      "person_detection": {
+        "name": "Deteção de pessoas",
+        "state": {
+          "off": "Desligada",
+          "low": "Baixa",
+          "normal": "Normal",
+          "high": "Alta"
+        }
+      },
+      "vehicle_detection": {
+        "name": "Deteção de veículos",
+        "state": {
+          "off": "Desligada",
+          "low": "Baixa",
+          "normal": "Normal",
+          "high": "Alta"
+        }
+      },
+      "pet_detection": {
+        "name": "Deteção de animais",
+        "state": {
+          "off": "Desligada",
+          "low": "Baixa",
+          "normal": "Normal",
+          "high": "Alta"
+        }
+      },
+      "package_detection": {
+        "name": "Deteção de encomendas",
+        "state": {
+          "off": "Desligada",
+          "low": "Baixa",
+          "normal": "Normal",
+          "high": "Alta"
+        }
+      },
+      "baby_cry_detection": {
+        "name": "Deteção de choro de bebé",
+        "state": {
+          "off": "Desligada",
+          "low": "Baixa",
+          "normal": "Normal",
+          "high": "Alta"
+        }
+      },
+      "bark_detection": {
+        "name": "Deteção de latidos",
+        "state": {
+          "off": "Desligada",
+          "low": "Baixa",
+          "normal": "Normal",
+          "high": "Alta"
+        }
+      },
+      "meow_detection": {
+        "name": "Deteção de miados",
+        "state": {
+          "off": "Desligada",
+          "low": "Baixa",
+          "normal": "Normal",
+          "high": "Alta"
+        }
+      },
+      "glass_break_detection": {
+        "name": "Deteção de quebra de vidro",
+        "state": {
+          "off": "Desligada",
+          "low": "Baixa",
+          "normal": "Normal",
+          "high": "Alta"
+        }
+      },
+      "tamper_detection": {
+        "name": "Deteção de sabotagem",
+        "state": {
+          "off": "Desligada",
+          "low": "Baixa",
+          "normal": "Normal",
+          "high": "Alta"
+        }
+      },
+      "night_vision": {
+        "name": "Visão noturna",
+        "state": {
+          "inf_night_vision": "Infravermelhos",
+          "wtl_night_vision": "Cor total",
+          "md_night_vision": "Inteligente",
+          "dbl_night_vision": "Luz dupla"
+        }
+      },
+      "day_night_mode": {
+        "name": "Modo dia/noite",
+        "state": {
+          "auto": "Auto",
+          "on": "Noite",
+          "off": "Dia"
+        }
+      },
+      "light_frequency": {
+        "name": "Frequência da luz",
+        "state": {
+          "auto": "Auto",
+          "50": "50 Hz",
+          "60": "60 Hz"
+        }
+      },
+      "preset": {
+        "name": "Posição predefinida"
+      },
+      "stream_quality": {
+        "name": "Qualidade da transmissão",
+        "state": {
+          "hd": "HD",
+          "sd": "SD"
+        }
+      }
+    },
+    "sensor": {
+      "ssid": {
+        "name": "Rede Wi-Fi"
+      },
+      "link_type": {
+        "name": "Tipo de ligação"
+      },
+      "ip_address": {
+        "name": "Endereço IP"
+      },
+      "sd_card_status": {
+        "name": "Estado do cartão SD"
+      },
+      "sd_card_free_space": {
+        "name": "Espaço livre do cartão SD"
+      },
+      "sd_card_total_space": {
+        "name": "Tamanho do cartão SD"
+      }
+    },
+    "siren": {
+      "siren": {
+        "name": "Alarme"
+      }
+    },
+    "switch": {
+      "privacy_mode": {
+        "name": "Modo de privacidade"
+      },
+      "indicator_led": {
+        "name": "LED de estado"
+      },
+      "notifications": {
+        "name": "Notificações"
+      },
+      "rich_notifications": {
+        "name": "Notificações avançadas"
+      },
+      "record_audio": {
+        "name": "Gravar áudio"
+      },
+      "microphone_mute": {
+        "name": "Microfone silenciado"
+      },
+      "noise_cancelling": {
+        "name": "Cancelamento de ruído"
+      },
+      "lens_distortion_correction": {
+        "name": "Correção da distorção da lente"
+      },
+      "flip": {
+        "name": "Inverter imagem"
+      },
+      "auto_track": {
+        "name": "Seguimento automático"
+      },
+      "privacy_zones": {
+        "name": "Zonas de privacidade"
+      },
+      "record_to_sd_card": {
+        "name": "Gravar no cartão SD"
+      },
+      "circular_recording": {
+        "name": "Gravação contínua"
+      },
+      "line_crossing_detection": {
+        "name": "Deteção de cruzamento de linha"
+      },
+      "automatic_reboot": {
+        "name": "Reinício agendado"
+      },
+      "automatic_firmware_upgrade": {
+        "name": "Atualização automática do firmware"
+      },
+      "diagnose_mode": {
+        "name": "Modo de diagnóstico"
+      },
+      "smart_track": {
+        "name": "Seguimento inteligente {type}"
+      },
+      "alarm_trigger": {
+        "name": "Alarme com {type}"
+      }
+    }
+  },
+  "exceptions": {
+    "invalid_auth": {
+      "message": "A câmara {host} recusou as credenciais."
+    },
+    "suspended": {
+      "message": "A câmara {host} bloqueia os inícios de sessão durante {seconds} s após demasiadas falhas."
+    },
+    "cannot_connect": {
+      "message": "A câmara {host} não respondeu: {error}"
+    },
+    "privacy_mode": {
+      "message": "Não é possível enquanto o modo de privacidade estiver ativado."
+    },
+    "command_failed": {
+      "message": "A câmara {host} recusou a alteração: {error}"
+    }
+  },
+  "services": {
+    "ptz": {
+      "name": "Rotação e inclinação",
+      "description": "Roda a câmara pelos ângulos indicados, a partir da posição atual.",
+      "fields": {
+        "pan": {
+          "name": "Rotação",
+          "description": "Graus para a direita (negativo: para a esquerda)."
+        },
+        "tilt": {
+          "name": "Inclinação",
+          "description": "Graus para cima (negativo: para baixo)."
+        }
+      }
+    },
+    "go_to_preset": {
+      "name": "Ir para posição predefinida",
+      "description": "Move a câmara para uma posição guardada.",
+      "fields": {
+        "preset": {
+          "name": "Posição predefinida",
+          "description": "Nome ou ID da posição."
+        }
+      }
+    },
+    "save_preset": {
+      "name": "Guardar posição",
+      "description": "Guarda a posição atual da câmara.",
+      "fields": {
+        "name": {
+          "name": "Nome",
+          "description": "Nome da nova posição."
+        }
+      }
+    },
+    "delete_preset": {
+      "name": "Eliminar posição",
+      "description": "Elimina uma posição guardada.",
+      "fields": {
+        "preset": {
+          "name": "Posição predefinida",
+          "description": "Nome ou ID da posição."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Tapo Cameras",
+  "content_in_root": false,
+  "render_readme": true,
+  "zip_release": true,
+  "filename": "tapo_cameras.zip",
+  "homeassistant": "2025.8.0"
+}

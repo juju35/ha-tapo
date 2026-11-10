@@ -1,0 +1,451 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Камера Tapo",
+        "description": "В приложении Tapo включите Совместимость со сторонними сервисами (в разделе Я), затем создайте учётную запись камеры в расширенных настройках камеры.",
+        "data": {
+          "host": "Хост",
+          "cloud_password": "Пароль учётной записи Tapo",
+          "username": "Имя пользователя учётной записи камеры",
+          "password": "Пароль учётной записи камеры",
+          "control_port": "Порт управления"
+        },
+        "data_description": {
+          "host": "IP-адрес камеры. Задайте ей постоянный адрес в роутере.",
+          "cloud_password": "Пароль учётной записи TP-Link, к которой добавлена камера; используется для её настроек.",
+          "username": "Учётная запись камеры для видеопотоков и событий обнаружения.",
+          "password": "Пароль учётной записи камеры.",
+          "control_port": "443 для камер и дверных звонков."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Повторный вход",
+        "description": "Камера {host} отклонила учётные данные.",
+        "data": {
+          "cloud_password": "Пароль учётной записи Tapo",
+          "username": "Имя пользователя учётной записи камеры",
+          "password": "Пароль учётной записи камеры"
+        }
+      },
+      "reconfigure": {
+        "title": "Камера Tapo",
+        "data": {
+          "host": "Хост",
+          "cloud_password": "Пароль учётной записи Tapo",
+          "username": "Имя пользователя учётной записи камеры",
+          "password": "Пароль учётной записи камеры",
+          "control_port": "Порт управления"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Неверный пароль. Используйте пароль учётной записи Tapo и проверьте, что Совместимость со сторонними сервисами включена.",
+      "suspended": "После слишком многих неудачных попыток камера на время блокирует вход. Повторите через несколько минут.",
+      "cannot_connect": "Камера не ответила. Проверьте её адрес и доступность портов 443, 554 и 2020."
+    },
+    "abort": {
+      "already_configured": "Эта камера уже настроена.",
+      "reauth_successful": "Вход выполнен повторно.",
+      "reconfigure_successful": "Камера обновлена.",
+      "wrong_camera": "Этот адрес принадлежит другой камере."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Параметры камеры Tapo",
+        "data": {
+          "scan_interval": "Интервал обновления (с)",
+          "onvif_events": "События обнаружения",
+          "motion_timeout": "Защитный тайм-аут обнаружений (с)",
+          "rtsp_transport": "Транспорт RTSP",
+          "extra_ffmpeg_arguments": "Дополнительные аргументы FFmpeg для снимков"
+        },
+        "data_description": {
+          "scan_interval": "Как часто считываются настройки. Обнаружения камера отправляет сама, независимо от этого интервала.",
+          "onvif_events": "Датчики движения, человека, транспорта… из событий ONVIF камеры (порт 2020).",
+          "motion_timeout": "Обнаружение без новостей в течение этого времени выключается. 0 — оставлять активным, пока камера его не завершит.",
+          "rtsp_transport": "TCP — самый надёжный.",
+          "extra_ffmpeg_arguments": "Добавляются к команде FFmpeg, делающей снимки."
+        }
+      }
+    }
+  },
+  "selector": {
+    "rtsp_transport": {
+      "options": {
+        "tcp": "TCP",
+        "udp": "UDP",
+        "udp_multicast": "UDP multicast",
+        "http": "HTTP"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "event_subscription": {
+        "name": "События обнаружения"
+      },
+      "motion": {
+        "name": "Движение"
+      },
+      "person": {
+        "name": "Человек"
+      },
+      "vehicle": {
+        "name": "Транспорт"
+      },
+      "pet": {
+        "name": "Питомец"
+      },
+      "line_crossing": {
+        "name": "Пересечение линии"
+      },
+      "tamper": {
+        "name": "Вмешательство"
+      },
+      "baby_cry": {
+        "name": "Плач ребёнка"
+      },
+      "bark": {
+        "name": "Лай"
+      },
+      "meow": {
+        "name": "Мяуканье"
+      },
+      "glass_break": {
+        "name": "Разбитие стекла"
+      },
+      "package": {
+        "name": "Посылка"
+      },
+      "area_intrusion": {
+        "name": "Вторжение в зону"
+      },
+      "detection": {
+        "name": "Обнаружение {type}"
+      }
+    },
+    "button": {
+      "move_up": {
+        "name": "Вверх"
+      },
+      "move_down": {
+        "name": "Вниз"
+      },
+      "move_left": {
+        "name": "Влево"
+      },
+      "move_right": {
+        "name": "Вправо"
+      },
+      "calibrate": {
+        "name": "Калибровать"
+      },
+      "format_sd_card": {
+        "name": "Форматировать SD-карту"
+      }
+    },
+    "light": {
+      "spotlight": {
+        "name": "Прожектор"
+      },
+      "floodlight": {
+        "name": "Заливающий свет"
+      }
+    },
+    "number": {
+      "speaker_volume": {
+        "name": "Громкость динамика"
+      },
+      "microphone_volume": {
+        "name": "Громкость микрофона"
+      },
+      "motion_sensitivity": {
+        "name": "Чувствительность к движению"
+      },
+      "spotlight_intensity": {
+        "name": "Яркость прожектора"
+      },
+      "move_angle": {
+        "name": "Шаг перемещения"
+      }
+    },
+    "select": {
+      "motion_detection": {
+        "name": "Обнаружение движения",
+        "state": {
+          "off": "Выкл.",
+          "low": "Низкая",
+          "normal": "Обычная",
+          "high": "Высокая"
+        }
+      },
+      "person_detection": {
+        "name": "Обнаружение людей",
+        "state": {
+          "off": "Выкл.",
+          "low": "Низкая",
+          "normal": "Обычная",
+          "high": "Высокая"
+        }
+      },
+      "vehicle_detection": {
+        "name": "Обнаружение транспорта",
+        "state": {
+          "off": "Выкл.",
+          "low": "Низкая",
+          "normal": "Обычная",
+          "high": "Высокая"
+        }
+      },
+      "pet_detection": {
+        "name": "Обнаружение питомцев",
+        "state": {
+          "off": "Выкл.",
+          "low": "Низкая",
+          "normal": "Обычная",
+          "high": "Высокая"
+        }
+      },
+      "package_detection": {
+        "name": "Обнаружение посылок",
+        "state": {
+          "off": "Выкл.",
+          "low": "Низкая",
+          "normal": "Обычная",
+          "high": "Высокая"
+        }
+      },
+      "baby_cry_detection": {
+        "name": "Обнаружение плача ребёнка",
+        "state": {
+          "off": "Выкл.",
+          "low": "Низкая",
+          "normal": "Обычная",
+          "high": "Высокая"
+        }
+      },
+      "bark_detection": {
+        "name": "Обнаружение лая",
+        "state": {
+          "off": "Выкл.",
+          "low": "Низкая",
+          "normal": "Обычная",
+          "high": "Высокая"
+        }
+      },
+      "meow_detection": {
+        "name": "Обнаружение мяуканья",
+        "state": {
+          "off": "Выкл.",
+          "low": "Низкая",
+          "normal": "Обычная",
+          "high": "Высокая"
+        }
+      },
+      "glass_break_detection": {
+        "name": "Обнаружение разбития стекла",
+        "state": {
+          "off": "Выкл.",
+          "low": "Низкая",
+          "normal": "Обычная",
+          "high": "Высокая"
+        }
+      },
+      "tamper_detection": {
+        "name": "Обнаружение вмешательства",
+        "state": {
+          "off": "Выкл.",
+          "low": "Низкая",
+          "normal": "Обычная",
+          "high": "Высокая"
+        }
+      },
+      "night_vision": {
+        "name": "Ночное видение",
+        "state": {
+          "inf_night_vision": "Инфракрасное",
+          "wtl_night_vision": "Полноцветное",
+          "md_night_vision": "Умное",
+          "dbl_night_vision": "Двойная подсветка"
+        }
+      },
+      "day_night_mode": {
+        "name": "Режим день/ночь",
+        "state": {
+          "auto": "Авто",
+          "on": "Ночь",
+          "off": "День"
+        }
+      },
+      "light_frequency": {
+        "name": "Частота освещения",
+        "state": {
+          "auto": "Авто",
+          "50": "50 Hz",
+          "60": "60 Hz"
+        }
+      },
+      "preset": {
+        "name": "Предустановка"
+      },
+      "stream_quality": {
+        "name": "Качество потока",
+        "state": {
+          "hd": "HD",
+          "sd": "SD"
+        }
+      }
+    },
+    "sensor": {
+      "ssid": {
+        "name": "Сеть Wi-Fi"
+      },
+      "link_type": {
+        "name": "Тип подключения"
+      },
+      "ip_address": {
+        "name": "IP-адрес"
+      },
+      "sd_card_status": {
+        "name": "Состояние SD-карты"
+      },
+      "sd_card_free_space": {
+        "name": "Свободно на SD-карте"
+      },
+      "sd_card_total_space": {
+        "name": "Объём SD-карты"
+      }
+    },
+    "siren": {
+      "siren": {
+        "name": "Тревога"
+      }
+    },
+    "switch": {
+      "privacy_mode": {
+        "name": "Режим конфиденциальности"
+      },
+      "indicator_led": {
+        "name": "Индикатор состояния"
+      },
+      "notifications": {
+        "name": "Уведомления"
+      },
+      "rich_notifications": {
+        "name": "Расширенные уведомления"
+      },
+      "record_audio": {
+        "name": "Записывать звук"
+      },
+      "microphone_mute": {
+        "name": "Микрофон выключен"
+      },
+      "noise_cancelling": {
+        "name": "Шумоподавление"
+      },
+      "lens_distortion_correction": {
+        "name": "Коррекция искажений объектива"
+      },
+      "flip": {
+        "name": "Перевернуть изображение"
+      },
+      "auto_track": {
+        "name": "Автоматическое слежение"
+      },
+      "privacy_zones": {
+        "name": "Зоны конфиденциальности"
+      },
+      "record_to_sd_card": {
+        "name": "Запись на SD-карту"
+      },
+      "circular_recording": {
+        "name": "Циклическая запись"
+      },
+      "line_crossing_detection": {
+        "name": "Обнаружение пересечения линии"
+      },
+      "automatic_reboot": {
+        "name": "Перезагрузка по расписанию"
+      },
+      "automatic_firmware_upgrade": {
+        "name": "Автообновление прошивки"
+      },
+      "diagnose_mode": {
+        "name": "Режим диагностики"
+      },
+      "smart_track": {
+        "name": "Умное слежение {type}"
+      },
+      "alarm_trigger": {
+        "name": "Тревога при {type}"
+      }
+    }
+  },
+  "exceptions": {
+    "invalid_auth": {
+      "message": "Камера {host} отклонила учётные данные."
+    },
+    "suspended": {
+      "message": "Камера {host} блокирует вход на {seconds} с после слишком многих неудачных попыток."
+    },
+    "cannot_connect": {
+      "message": "Камера {host} не ответила: {error}"
+    },
+    "privacy_mode": {
+      "message": "Невозможно, пока включён режим конфиденциальности."
+    },
+    "command_failed": {
+      "message": "Камера {host} отклонила изменение: {error}"
+    }
+  },
+  "services": {
+    "ptz": {
+      "name": "Поворот и наклон",
+      "description": "Поворачивает камеру на заданные углы от текущего положения.",
+      "fields": {
+        "pan": {
+          "name": "Поворот",
+          "description": "Градусы вправо (отрицательные: влево)."
+        },
+        "tilt": {
+          "name": "Наклон",
+          "description": "Градусы вверх (отрицательные: вниз)."
+        }
+      }
+    },
+    "go_to_preset": {
+      "name": "Перейти к предустановке",
+      "description": "Перемещает камеру в сохранённое положение.",
+      "fields": {
+        "preset": {
+          "name": "Предустановка",
+          "description": "Имя или ID предустановки."
+        }
+      }
+    },
+    "save_preset": {
+      "name": "Сохранить предустановку",
+      "description": "Сохраняет текущее положение камеры.",
+      "fields": {
+        "name": {
+          "name": "Имя",
+          "description": "Имя новой предустановки."
+        }
+      }
+    },
+    "delete_preset": {
+      "name": "Удалить предустановку",
+      "description": "Удаляет сохранённое положение.",
+      "fields": {
+        "preset": {
+          "name": "Предустановка",
+          "description": "Имя или ID предустановки."
+        }
+      }
+    }
+  }
+}

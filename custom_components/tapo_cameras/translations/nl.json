@@ -1,0 +1,451 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Tapo-camera",
+        "description": "Zet in de Tapo-app Compatibiliteit met derden aan (onder Ik) en maak daarna een camera-account aan in de geavanceerde instellingen van de camera.",
+        "data": {
+          "host": "Host",
+          "cloud_password": "Wachtwoord van het Tapo-account",
+          "username": "Gebruikersnaam van het camera-account",
+          "password": "Wachtwoord van het camera-account",
+          "control_port": "Bedieningspoort"
+        },
+        "data_description": {
+          "host": "IP-adres van de camera. Geef de camera een vast adres in je router.",
+          "cloud_password": "Wachtwoord van het TP-Link-account waaraan de camera is toegevoegd, gebruikt voor de instellingen.",
+          "username": "Camera-account, gebruikt voor de videostreams en de detectiegebeurtenissen.",
+          "password": "Wachtwoord van het camera-account.",
+          "control_port": "443 voor camera's en deurbellen."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Opnieuw aanmelden",
+        "description": "De camera {host} heeft de inloggegevens geweigerd.",
+        "data": {
+          "cloud_password": "Wachtwoord van het Tapo-account",
+          "username": "Gebruikersnaam van het camera-account",
+          "password": "Wachtwoord van het camera-account"
+        }
+      },
+      "reconfigure": {
+        "title": "Tapo-camera",
+        "data": {
+          "host": "Host",
+          "cloud_password": "Wachtwoord van het Tapo-account",
+          "username": "Gebruikersnaam van het camera-account",
+          "password": "Wachtwoord van het camera-account",
+          "control_port": "Bedieningspoort"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Onjuist wachtwoord. Gebruik het wachtwoord van het Tapo-account en controleer of Compatibiliteit met derden aan staat.",
+      "suspended": "De camera blokkeert aanmeldingen een tijdje na te veel mislukte pogingen. Probeer het over enkele minuten opnieuw.",
+      "cannot_connect": "De camera reageerde niet. Controleer het adres en of de poorten 443, 554 en 2020 bereikbaar zijn."
+    },
+    "abort": {
+      "already_configured": "Deze camera is al geconfigureerd.",
+      "reauth_successful": "Opnieuw aangemeld.",
+      "reconfigure_successful": "Camera bijgewerkt.",
+      "wrong_camera": "Dit adres hoort bij een andere camera."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opties van de Tapo-camera",
+        "data": {
+          "scan_interval": "Verversingsinterval (s)",
+          "onvif_events": "Detectiegebeurtenissen",
+          "motion_timeout": "Veiligheidstime-out van detecties (s)",
+          "rtsp_transport": "RTSP-transport",
+          "extra_ffmpeg_arguments": "Extra FFmpeg-argumenten voor snapshots"
+        },
+        "data_description": {
+          "scan_interval": "Hoe vaak de instellingen worden gelezen. Detecties worden door de camera verstuurd, ongeacht dit interval.",
+          "onvif_events": "Sensoren voor beweging, persoon, voertuig… uit de ONVIF-gebeurtenissen van de camera (poort 2020).",
+          "motion_timeout": "Een detectie zonder nieuws gedurende deze tijd wordt uitgezet. 0 om hem actief te laten tot de camera hem beëindigt.",
+          "rtsp_transport": "TCP is het betrouwbaarst.",
+          "extra_ffmpeg_arguments": "Toegevoegd aan de FFmpeg-opdracht die snapshots maakt."
+        }
+      }
+    }
+  },
+  "selector": {
+    "rtsp_transport": {
+      "options": {
+        "tcp": "TCP",
+        "udp": "UDP",
+        "udp_multicast": "UDP-multicast",
+        "http": "HTTP"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "event_subscription": {
+        "name": "Detectiegebeurtenissen"
+      },
+      "motion": {
+        "name": "Beweging"
+      },
+      "person": {
+        "name": "Persoon"
+      },
+      "vehicle": {
+        "name": "Voertuig"
+      },
+      "pet": {
+        "name": "Huisdier"
+      },
+      "line_crossing": {
+        "name": "Lijnoverschrijding"
+      },
+      "tamper": {
+        "name": "Sabotage"
+      },
+      "baby_cry": {
+        "name": "Huilende baby"
+      },
+      "bark": {
+        "name": "Blaffen"
+      },
+      "meow": {
+        "name": "Miauwen"
+      },
+      "glass_break": {
+        "name": "Glasbreuk"
+      },
+      "package": {
+        "name": "Pakket"
+      },
+      "area_intrusion": {
+        "name": "Inbraak in zone"
+      },
+      "detection": {
+        "name": "Detectie {type}"
+      }
+    },
+    "button": {
+      "move_up": {
+        "name": "Omhoog"
+      },
+      "move_down": {
+        "name": "Omlaag"
+      },
+      "move_left": {
+        "name": "Naar links"
+      },
+      "move_right": {
+        "name": "Naar rechts"
+      },
+      "calibrate": {
+        "name": "Kalibreren"
+      },
+      "format_sd_card": {
+        "name": "SD-kaart formatteren"
+      }
+    },
+    "light": {
+      "spotlight": {
+        "name": "Spotlight"
+      },
+      "floodlight": {
+        "name": "Schijnwerper"
+      }
+    },
+    "number": {
+      "speaker_volume": {
+        "name": "Luidsprekervolume"
+      },
+      "microphone_volume": {
+        "name": "Microfoonvolume"
+      },
+      "motion_sensitivity": {
+        "name": "Bewegingsgevoeligheid"
+      },
+      "spotlight_intensity": {
+        "name": "Spotlight-intensiteit"
+      },
+      "move_angle": {
+        "name": "Bewegingsstap"
+      }
+    },
+    "select": {
+      "motion_detection": {
+        "name": "Bewegingsdetectie",
+        "state": {
+          "off": "Uit",
+          "low": "Laag",
+          "normal": "Normaal",
+          "high": "Hoog"
+        }
+      },
+      "person_detection": {
+        "name": "Persoonsdetectie",
+        "state": {
+          "off": "Uit",
+          "low": "Laag",
+          "normal": "Normaal",
+          "high": "Hoog"
+        }
+      },
+      "vehicle_detection": {
+        "name": "Voertuigdetectie",
+        "state": {
+          "off": "Uit",
+          "low": "Laag",
+          "normal": "Normaal",
+          "high": "Hoog"
+        }
+      },
+      "pet_detection": {
+        "name": "Huisdierdetectie",
+        "state": {
+          "off": "Uit",
+          "low": "Laag",
+          "normal": "Normaal",
+          "high": "Hoog"
+        }
+      },
+      "package_detection": {
+        "name": "Pakketdetectie",
+        "state": {
+          "off": "Uit",
+          "low": "Laag",
+          "normal": "Normaal",
+          "high": "Hoog"
+        }
+      },
+      "baby_cry_detection": {
+        "name": "Detectie van huilende baby",
+        "state": {
+          "off": "Uit",
+          "low": "Laag",
+          "normal": "Normaal",
+          "high": "Hoog"
+        }
+      },
+      "bark_detection": {
+        "name": "Blafdetectie",
+        "state": {
+          "off": "Uit",
+          "low": "Laag",
+          "normal": "Normaal",
+          "high": "Hoog"
+        }
+      },
+      "meow_detection": {
+        "name": "Miauwdetectie",
+        "state": {
+          "off": "Uit",
+          "low": "Laag",
+          "normal": "Normaal",
+          "high": "Hoog"
+        }
+      },
+      "glass_break_detection": {
+        "name": "Glasbreukdetectie",
+        "state": {
+          "off": "Uit",
+          "low": "Laag",
+          "normal": "Normaal",
+          "high": "Hoog"
+        }
+      },
+      "tamper_detection": {
+        "name": "Sabotagedetectie",
+        "state": {
+          "off": "Uit",
+          "low": "Laag",
+          "normal": "Normaal",
+          "high": "Hoog"
+        }
+      },
+      "night_vision": {
+        "name": "Nachtzicht",
+        "state": {
+          "inf_night_vision": "Infrarood",
+          "wtl_night_vision": "Volledige kleur",
+          "md_night_vision": "Slim",
+          "dbl_night_vision": "Dubbel licht"
+        }
+      },
+      "day_night_mode": {
+        "name": "Dag/nacht-modus",
+        "state": {
+          "auto": "Auto",
+          "on": "Nacht",
+          "off": "Dag"
+        }
+      },
+      "light_frequency": {
+        "name": "Lichtfrequentie",
+        "state": {
+          "auto": "Auto",
+          "50": "50 Hz",
+          "60": "60 Hz"
+        }
+      },
+      "preset": {
+        "name": "Voorinstelling"
+      },
+      "stream_quality": {
+        "name": "Streamkwaliteit",
+        "state": {
+          "hd": "HD",
+          "sd": "SD"
+        }
+      }
+    },
+    "sensor": {
+      "ssid": {
+        "name": "Wifi-netwerk"
+      },
+      "link_type": {
+        "name": "Verbindingstype"
+      },
+      "ip_address": {
+        "name": "IP-adres"
+      },
+      "sd_card_status": {
+        "name": "Status SD-kaart"
+      },
+      "sd_card_free_space": {
+        "name": "Vrije ruimte SD-kaart"
+      },
+      "sd_card_total_space": {
+        "name": "Grootte SD-kaart"
+      }
+    },
+    "siren": {
+      "siren": {
+        "name": "Alarm"
+      }
+    },
+    "switch": {
+      "privacy_mode": {
+        "name": "Privacymodus"
+      },
+      "indicator_led": {
+        "name": "Status-led"
+      },
+      "notifications": {
+        "name": "Meldingen"
+      },
+      "rich_notifications": {
+        "name": "Uitgebreide meldingen"
+      },
+      "record_audio": {
+        "name": "Audio opnemen"
+      },
+      "microphone_mute": {
+        "name": "Microfoon gedempt"
+      },
+      "noise_cancelling": {
+        "name": "Ruisonderdrukking"
+      },
+      "lens_distortion_correction": {
+        "name": "Correctie van lensvervorming"
+      },
+      "flip": {
+        "name": "Beeld spiegelen"
+      },
+      "auto_track": {
+        "name": "Automatisch volgen"
+      },
+      "privacy_zones": {
+        "name": "Privacyzones"
+      },
+      "record_to_sd_card": {
+        "name": "Opnemen op SD-kaart"
+      },
+      "circular_recording": {
+        "name": "Lusopname"
+      },
+      "line_crossing_detection": {
+        "name": "Lijnoverschrijdingsdetectie"
+      },
+      "automatic_reboot": {
+        "name": "Geplande herstart"
+      },
+      "automatic_firmware_upgrade": {
+        "name": "Automatische firmware-update"
+      },
+      "diagnose_mode": {
+        "name": "Diagnosemodus"
+      },
+      "smart_track": {
+        "name": "Slim volgen {type}"
+      },
+      "alarm_trigger": {
+        "name": "Alarm bij {type}"
+      }
+    }
+  },
+  "exceptions": {
+    "invalid_auth": {
+      "message": "De camera {host} heeft de inloggegevens geweigerd."
+    },
+    "suspended": {
+      "message": "De camera {host} blokkeert aanmeldingen gedurende {seconds} s na te veel mislukte pogingen."
+    },
+    "cannot_connect": {
+      "message": "De camera {host} reageerde niet: {error}"
+    },
+    "privacy_mode": {
+      "message": "Niet mogelijk zolang de privacymodus aan staat."
+    },
+    "command_failed": {
+      "message": "De camera {host} heeft de wijziging geweigerd: {error}"
+    }
+  },
+  "services": {
+    "ptz": {
+      "name": "Pannen en kantelen",
+      "description": "Draait de camera over de opgegeven hoeken, vanaf de huidige positie.",
+      "fields": {
+        "pan": {
+          "name": "Pannen",
+          "description": "Graden naar rechts (negatief: naar links)."
+        },
+        "tilt": {
+          "name": "Kantelen",
+          "description": "Graden omhoog (negatief: omlaag)."
+        }
+      }
+    },
+    "go_to_preset": {
+      "name": "Naar voorinstelling",
+      "description": "Beweegt de camera naar een opgeslagen positie.",
+      "fields": {
+        "preset": {
+          "name": "Voorinstelling",
+          "description": "Naam of ID van de voorinstelling."
+        }
+      }
+    },
+    "save_preset": {
+      "name": "Voorinstelling opslaan",
+      "description": "Slaat de huidige positie van de camera op.",
+      "fields": {
+        "name": {
+          "name": "Naam",
+          "description": "Naam van de nieuwe voorinstelling."
+        }
+      }
+    },
+    "delete_preset": {
+      "name": "Voorinstelling verwijderen",
+      "description": "Verwijdert een opgeslagen positie.",
+      "fields": {
+        "preset": {
+          "name": "Voorinstelling",
+          "description": "Naam of ID van de voorinstelling."
+        }
+      }
+    }
+  }
+}

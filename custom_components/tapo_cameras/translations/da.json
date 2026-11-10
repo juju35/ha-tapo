@@ -1,0 +1,451 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Tapo-kamera",
+        "description": "Slå Tredjepartskompatibilitet til i Tapo-appen (under Mig), og opret derefter en kamerakonto i kameraets avancerede indstillinger.",
+        "data": {
+          "host": "Vært",
+          "cloud_password": "Adgangskode til Tapo-kontoen",
+          "username": "Brugernavn til kamerakontoen",
+          "password": "Adgangskode til kamerakontoen",
+          "control_port": "Kontrolport"
+        },
+        "data_description": {
+          "host": "Kameraets IP-adresse. Giv det en fast adresse i din router.",
+          "cloud_password": "Adgangskoden til den TP-Link-konto, kameraet er tilføjet, brugt til dets indstillinger.",
+          "username": "Kamerakonto, brugt til videostreams og detektionshændelser.",
+          "password": "Adgangskode til kamerakontoen.",
+          "control_port": "443 for kameraer og dørklokker."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Log ind igen",
+        "description": "Kameraet {host} afviste loginoplysningerne.",
+        "data": {
+          "cloud_password": "Adgangskode til Tapo-kontoen",
+          "username": "Brugernavn til kamerakontoen",
+          "password": "Adgangskode til kamerakontoen"
+        }
+      },
+      "reconfigure": {
+        "title": "Tapo-kamera",
+        "data": {
+          "host": "Vært",
+          "cloud_password": "Adgangskode til Tapo-kontoen",
+          "username": "Brugernavn til kamerakontoen",
+          "password": "Adgangskode til kamerakontoen",
+          "control_port": "Kontrolport"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Forkert adgangskode. Brug adgangskoden til Tapo-kontoen, og kontrollér, at Tredjepartskompatibilitet er slået til.",
+      "suspended": "Kameraet blokerer login i et stykke tid efter for mange fejl. Prøv igen om et par minutter.",
+      "cannot_connect": "Kameraet svarede ikke. Kontrollér adressen, og at portene 443, 554 og 2020 kan nås."
+    },
+    "abort": {
+      "already_configured": "Dette kamera er allerede konfigureret.",
+      "reauth_successful": "Logget ind igen.",
+      "reconfigure_successful": "Kamera opdateret.",
+      "wrong_camera": "Denne adresse tilhører et andet kamera."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Indstillinger for Tapo-kamera",
+        "data": {
+          "scan_interval": "Opdateringsinterval (s)",
+          "onvif_events": "Detektionshændelser",
+          "motion_timeout": "Sikkerhedstimeout for detektioner (s)",
+          "rtsp_transport": "RTSP-transport",
+          "extra_ffmpeg_arguments": "Ekstra FFmpeg-argumenter til snapshots"
+        },
+        "data_description": {
+          "scan_interval": "Hvor ofte indstillingerne læses. Detektioner sendes af kameraet uanset dette interval.",
+          "onvif_events": "Sensorer for bevægelse, person, køretøj… fra kameraets ONVIF-hændelser (port 2020).",
+          "motion_timeout": "En detektion uden nyt i så lang tid slås fra. 0 for at holde den aktiv, til kameraet afslutter den.",
+          "rtsp_transport": "TCP er det mest pålidelige.",
+          "extra_ffmpeg_arguments": "Tilføjes til FFmpeg-kommandoen, der tager snapshots."
+        }
+      }
+    }
+  },
+  "selector": {
+    "rtsp_transport": {
+      "options": {
+        "tcp": "TCP",
+        "udp": "UDP",
+        "udp_multicast": "UDP-multicast",
+        "http": "HTTP"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "event_subscription": {
+        "name": "Detektionshændelser"
+      },
+      "motion": {
+        "name": "Bevægelse"
+      },
+      "person": {
+        "name": "Person"
+      },
+      "vehicle": {
+        "name": "Køretøj"
+      },
+      "pet": {
+        "name": "Kæledyr"
+      },
+      "line_crossing": {
+        "name": "Linjekrydsning"
+      },
+      "tamper": {
+        "name": "Sabotage"
+      },
+      "baby_cry": {
+        "name": "Babygråd"
+      },
+      "bark": {
+        "name": "Gøen"
+      },
+      "meow": {
+        "name": "Mjaven"
+      },
+      "glass_break": {
+        "name": "Glasbrud"
+      },
+      "package": {
+        "name": "Pakke"
+      },
+      "area_intrusion": {
+        "name": "Indtrængen i område"
+      },
+      "detection": {
+        "name": "Detektion {type}"
+      }
+    },
+    "button": {
+      "move_up": {
+        "name": "Flyt op"
+      },
+      "move_down": {
+        "name": "Flyt ned"
+      },
+      "move_left": {
+        "name": "Flyt til venstre"
+      },
+      "move_right": {
+        "name": "Flyt til højre"
+      },
+      "calibrate": {
+        "name": "Kalibrer"
+      },
+      "format_sd_card": {
+        "name": "Formatér SD-kort"
+      }
+    },
+    "light": {
+      "spotlight": {
+        "name": "Spotlys"
+      },
+      "floodlight": {
+        "name": "Projektørlys"
+      }
+    },
+    "number": {
+      "speaker_volume": {
+        "name": "Højttalerlydstyrke"
+      },
+      "microphone_volume": {
+        "name": "Mikrofonlydstyrke"
+      },
+      "motion_sensitivity": {
+        "name": "Bevægelsesfølsomhed"
+      },
+      "spotlight_intensity": {
+        "name": "Spotlysets styrke"
+      },
+      "move_angle": {
+        "name": "Flyttetrin"
+      }
+    },
+    "select": {
+      "motion_detection": {
+        "name": "Bevægelsesdetektion",
+        "state": {
+          "off": "Fra",
+          "low": "Lav",
+          "normal": "Normal",
+          "high": "Høj"
+        }
+      },
+      "person_detection": {
+        "name": "Persondetektion",
+        "state": {
+          "off": "Fra",
+          "low": "Lav",
+          "normal": "Normal",
+          "high": "Høj"
+        }
+      },
+      "vehicle_detection": {
+        "name": "Køretøjsdetektion",
+        "state": {
+          "off": "Fra",
+          "low": "Lav",
+          "normal": "Normal",
+          "high": "Høj"
+        }
+      },
+      "pet_detection": {
+        "name": "Kæledyrsdetektion",
+        "state": {
+          "off": "Fra",
+          "low": "Lav",
+          "normal": "Normal",
+          "high": "Høj"
+        }
+      },
+      "package_detection": {
+        "name": "Pakkedetektion",
+        "state": {
+          "off": "Fra",
+          "low": "Lav",
+          "normal": "Normal",
+          "high": "Høj"
+        }
+      },
+      "baby_cry_detection": {
+        "name": "Detektion af babygråd",
+        "state": {
+          "off": "Fra",
+          "low": "Lav",
+          "normal": "Normal",
+          "high": "Høj"
+        }
+      },
+      "bark_detection": {
+        "name": "Detektion af gøen",
+        "state": {
+          "off": "Fra",
+          "low": "Lav",
+          "normal": "Normal",
+          "high": "Høj"
+        }
+      },
+      "meow_detection": {
+        "name": "Detektion af mjaven",
+        "state": {
+          "off": "Fra",
+          "low": "Lav",
+          "normal": "Normal",
+          "high": "Høj"
+        }
+      },
+      "glass_break_detection": {
+        "name": "Detektion af glasbrud",
+        "state": {
+          "off": "Fra",
+          "low": "Lav",
+          "normal": "Normal",
+          "high": "Høj"
+        }
+      },
+      "tamper_detection": {
+        "name": "Sabotagedetektion",
+        "state": {
+          "off": "Fra",
+          "low": "Lav",
+          "normal": "Normal",
+          "high": "Høj"
+        }
+      },
+      "night_vision": {
+        "name": "Nattesyn",
+        "state": {
+          "inf_night_vision": "Infrarød",
+          "wtl_night_vision": "Fuld farve",
+          "md_night_vision": "Smart",
+          "dbl_night_vision": "Dobbelt lys"
+        }
+      },
+      "day_night_mode": {
+        "name": "Dag/nat-tilstand",
+        "state": {
+          "auto": "Auto",
+          "on": "Nat",
+          "off": "Dag"
+        }
+      },
+      "light_frequency": {
+        "name": "Lysfrekvens",
+        "state": {
+          "auto": "Auto",
+          "50": "50 Hz",
+          "60": "60 Hz"
+        }
+      },
+      "preset": {
+        "name": "Forudindstilling"
+      },
+      "stream_quality": {
+        "name": "Streamkvalitet",
+        "state": {
+          "hd": "HD",
+          "sd": "SD"
+        }
+      }
+    },
+    "sensor": {
+      "ssid": {
+        "name": "Wi-Fi-netværk"
+      },
+      "link_type": {
+        "name": "Forbindelsestype"
+      },
+      "ip_address": {
+        "name": "IP-adresse"
+      },
+      "sd_card_status": {
+        "name": "SD-kortets status"
+      },
+      "sd_card_free_space": {
+        "name": "Ledig plads på SD-kortet"
+      },
+      "sd_card_total_space": {
+        "name": "SD-kortets størrelse"
+      }
+    },
+    "siren": {
+      "siren": {
+        "name": "Alarm"
+      }
+    },
+    "switch": {
+      "privacy_mode": {
+        "name": "Privatlivstilstand"
+      },
+      "indicator_led": {
+        "name": "Status-LED"
+      },
+      "notifications": {
+        "name": "Notifikationer"
+      },
+      "rich_notifications": {
+        "name": "Udvidede notifikationer"
+      },
+      "record_audio": {
+        "name": "Optag lyd"
+      },
+      "microphone_mute": {
+        "name": "Mikrofon slået fra"
+      },
+      "noise_cancelling": {
+        "name": "Støjreduktion"
+      },
+      "lens_distortion_correction": {
+        "name": "Korrektion af linseforvrængning"
+      },
+      "flip": {
+        "name": "Vend billedet"
+      },
+      "auto_track": {
+        "name": "Automatisk sporing"
+      },
+      "privacy_zones": {
+        "name": "Privatlivszoner"
+      },
+      "record_to_sd_card": {
+        "name": "Optag på SD-kort"
+      },
+      "circular_recording": {
+        "name": "Loopoptagelse"
+      },
+      "line_crossing_detection": {
+        "name": "Detektion af linjekrydsning"
+      },
+      "automatic_reboot": {
+        "name": "Planlagt genstart"
+      },
+      "automatic_firmware_upgrade": {
+        "name": "Automatisk firmwareopdatering"
+      },
+      "diagnose_mode": {
+        "name": "Diagnosetilstand"
+      },
+      "smart_track": {
+        "name": "Smart sporing {type}"
+      },
+      "alarm_trigger": {
+        "name": "Alarm ved {type}"
+      }
+    }
+  },
+  "exceptions": {
+    "invalid_auth": {
+      "message": "Kameraet {host} afviste loginoplysningerne."
+    },
+    "suspended": {
+      "message": "Kameraet {host} blokerer login i {seconds} s efter for mange fejl."
+    },
+    "cannot_connect": {
+      "message": "Kameraet {host} svarede ikke: {error}"
+    },
+    "privacy_mode": {
+      "message": "Ikke muligt, mens privatlivstilstand er slået til."
+    },
+    "command_failed": {
+      "message": "Kameraet {host} afviste ændringen: {error}"
+    }
+  },
+  "services": {
+    "ptz": {
+      "name": "Panorér og vip",
+      "description": "Drejer kameraet de angivne vinkler fra dets nuværende position.",
+      "fields": {
+        "pan": {
+          "name": "Panorér",
+          "description": "Grader mod højre (negativ: mod venstre)."
+        },
+        "tilt": {
+          "name": "Vip",
+          "description": "Grader op (negativ: ned)."
+        }
+      }
+    },
+    "go_to_preset": {
+      "name": "Gå til forudindstilling",
+      "description": "Flytter kameraet til en gemt position.",
+      "fields": {
+        "preset": {
+          "name": "Forudindstilling",
+          "description": "Navn eller ID på forudindstillingen."
+        }
+      }
+    },
+    "save_preset": {
+      "name": "Gem forudindstilling",
+      "description": "Gemmer kameraets nuværende position.",
+      "fields": {
+        "name": {
+          "name": "Navn",
+          "description": "Navn på den nye forudindstilling."
+        }
+      }
+    },
+    "delete_preset": {
+      "name": "Slet forudindstilling",
+      "description": "Sletter en gemt position.",
+      "fields": {
+        "preset": {
+          "name": "Forudindstilling",
+          "description": "Navn eller ID på forudindstillingen."
+        }
+      }
+    }
+  }
+}
