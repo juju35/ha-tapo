@@ -9,6 +9,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant_custom_component.common import MockConfigEntry, async_fire_time_changed
@@ -111,6 +112,8 @@ async def test_events_drive_the_sensors(hass: HomeAssistant, with_events: MockCo
     await hass.async_block_till_done()
     assert _state(hass, "motion").state == "on"
     assert fired[0].data["type"] == "motion"
+    device = dr.async_entries_for_config_entry(dr.async_get(hass), with_events.entry_id)[0]
+    assert fired[0].data["device_id"] == device.id
 
     await subscription.batches.put([message("tns1:RuleEngine/CellMotionDetector/Motion", "IsMotion", "false")])
     await hass.async_block_till_done()

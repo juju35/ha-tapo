@@ -101,8 +101,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: TapoConfigEntry) -> bool
 
 
 def _device_id(hass: HomeAssistant, entry: TapoConfigEntry) -> str | None:
-    device = dr.async_get(hass).async_get_device(identifiers={(DOMAIN, entry.unique_id or entry.entry_id)})
-    return device.id if device else None
+    """The camera's device (one per entry), for the data of its events."""
+    devices = dr.async_entries_for_config_entry(dr.async_get(hass), entry.entry_id)
+    return devices[0].id if devices else None
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: TapoConfigEntry) -> bool:

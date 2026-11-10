@@ -120,6 +120,7 @@ class OnvifEvents:
         self._password = password
         self._motion_timeout = motion_timeout
         self._device_id = device_id
+        self._device: str | None = None
         self.states: dict[str, bool] = {}
         self.changed_at: dict[str, datetime] = {}
         self.connected = False
@@ -259,7 +260,9 @@ class OnvifEvents:
         self.states[key] = active
         self.changed_at[key] = dt_util.utcnow()
         if active:
-            self._hass.bus.async_fire(EVENT_TAPO, {"device_id": self._device_id(), "host": self.host, "type": key})
+            if self._device is None:
+                self._device = self._device_id()
+            self._hass.bus.async_fire(EVENT_TAPO, {"device_id": self._device, "host": self.host, "type": key})
         if notify:
             self._notify()
 
