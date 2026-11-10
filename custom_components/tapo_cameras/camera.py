@@ -1,11 +1,13 @@
 """Camera: one entity, its RTSP stream in the quality chosen with the "stream quality" select.
 
-On/off is the privacy mode.
+Turning it off turns privacy mode on. In privacy mode the camera sends no video: the entity stays
+on, without live stream, and shows a crossed-out camera instead of a snapshot.
 """
 
 from __future__ import annotations
 
 import asyncio
+from pathlib import Path
 from time import monotonic
 from typing import Any
 from urllib.parse import quote
@@ -47,11 +49,12 @@ def _privacy(data: TapoData) -> bool | None:
     return is_on(data.get(*PRIVACY))
 
 
+PRIVACY_IMAGE = Path(__file__).parent / "privacy.jpg"
+
+
 class TapoCamera(TapoEntity, Camera):
-    _attr_supported_features = CameraEntityFeature.STREAM | CameraEntityFeature.ON_OFF
-    # A frame of a running stream instead of a new RTSP connection: the camera allows only two.
-    _attr_use_stream_for_stills = True
     _attr_brand = "TP-Link"
+    _privacy_image: bytes | None = None
 
     def __init__(self, coordinator: TapoCoordinator) -> None:
         TapoEntity.__init__(self, coordinator, CAMERA)
@@ -70,18 +73,43 @@ class TapoCamera(TapoEntity, Camera):
     def _url(self) -> str:
         return self._base_url + STREAM_PATHS[self.coordinator.stream_quality]
 
+    @property
+    def privacy(self) -> bool:
+        return bool(_privacy(self.data))
+
+    async def async_added_to_hass(self) -> None:
+        await super().async_added_to_hass()
+        self._privacy_image = await self.hass.async_add_executor_job(PRIVACY_IMAGE.read_bytes)
+
     @callback
     def _handle_coordinator_update(self) -> None:
-        # The quality changed: a running stream switches to the other one.
-        if self._quality != self.coordinator.stream_quality:
-            self._quality = self.coordinator.stream_quality
-            if self.stream is not None and self.is_on:
+        if self.stream is not None:
+            if self.privacy:
+                # No video in privacy mode: stop the stream, the frontend falls back to stills.
+                stream, self.stream = self.stream, None
+                self.hass.async_create_task(stream.stop())
+            elif self._quality != self.coordinator.stream_quality:
+                # The quality changed: the running stream switches to the other one.
                 self.stream.update_source(self._url)
+        self._quality = self.coordinator.stream_quality
         super()._handle_coordinator_update()
 
     @property
+    def supported_features(self) -> CameraEntityFeature:
+        # Without STREAM in privacy mode, dashboards show the still (crossed-out camera) instead of a
+        # live view that would never start. Home Assistant follows the change at each state write.
+        features = CameraEntityFeature.ON_OFF
+        return features if self.privacy else features | CameraEntityFeature.STREAM
+
+    @property
+    def use_stream_for_stills(self) -> bool:
+        # A frame of the running stream instead of a new RTSP connection (the camera allows two);
+        # ffmpeg (async_camera_image) only without the stream integration, and for the privacy image.
+        return not self.privacy and "stream" in self.hass.config.components
+
+    @property
     def extra_state_attributes(self) -> dict[str, Any]:
-        return {"stream_quality": self.coordinator.stream_quality}
+        return {"stream_quality": self.coordinator.stream_quality, "privacy_mode": self.privacy}
 
     @property
     def model(self) -> str | None:
@@ -89,24 +117,25 @@ class TapoCamera(TapoEntity, Camera):
 
     @property
     def is_on(self) -> bool:
-        return not _privacy(self.data)
+        # Stays on in privacy mode: Home Assistant serves no image at all for a camera that is off.
+        return True
 
     @property
     def motion_detection_enabled(self) -> bool:
         return bool(is_on(self.data.get("getDetectionConfig", "motion_detection", "motion_det", "enabled")))
 
     async def stream_source(self) -> str | None:
-        return self._url if self.is_on else None
+        return None if self.privacy else self._url
 
     async def async_camera_image(self, width: int | None = None, height: int | None = None) -> bytes | None:
-        """A still from ffmpeg, when no stream is running (otherwise Home Assistant takes it from the stream).
+        """The crossed-out camera in privacy mode, otherwise a still from ffmpeg.
 
-        Dashboards ask every few seconds, often several at once: one ffmpeg at a time, and a still
-        taken less than SNAPSHOT_CACHE ago is served again, so that stills don't use up the camera's
-        two RTSP sessions.
+        Only called without the stream integration (see use_stream_for_stills). Dashboards ask every
+        few seconds, often several at once: one ffmpeg at a time, and a still taken less than
+        SNAPSHOT_CACHE ago is served again, so that stills don't use up the camera's two RTSP sessions.
         """
-        if not self.is_on:
-            return None
+        if self.privacy:
+            return self._privacy_image
         key = (self._url, width, height)
         async with self._snapshot_lock:
             cached = self._snapshot
