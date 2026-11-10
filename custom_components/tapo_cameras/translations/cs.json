@@ -1,0 +1,451 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Kamera Tapo",
+        "description": "V aplikaci Tapo zapněte Kompatibilitu s aplikacemi třetích stran (v sekci Já) a poté vytvořte účet kamery v Pokročilých nastaveních kamery.",
+        "data": {
+          "host": "Hostitel",
+          "cloud_password": "Heslo účtu Tapo",
+          "username": "Uživatelské jméno účtu kamery",
+          "password": "Heslo účtu kamery",
+          "control_port": "Řídicí port"
+        },
+        "data_description": {
+          "host": "IP adresa kamery. Přidělte jí v routeru pevnou adresu.",
+          "cloud_password": "Heslo účtu TP-Link, do kterého je kamera přidána, používané pro její nastavení.",
+          "username": "Účet kamery, používaný pro video streamy a události detekce.",
+          "password": "Heslo účtu kamery.",
+          "control_port": "443 pro kamery a zvonky."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Znovu se přihlásit",
+        "description": "Kamera {host} odmítla přihlašovací údaje.",
+        "data": {
+          "cloud_password": "Heslo účtu Tapo",
+          "username": "Uživatelské jméno účtu kamery",
+          "password": "Heslo účtu kamery"
+        }
+      },
+      "reconfigure": {
+        "title": "Kamera Tapo",
+        "data": {
+          "host": "Hostitel",
+          "cloud_password": "Heslo účtu Tapo",
+          "username": "Uživatelské jméno účtu kamery",
+          "password": "Heslo účtu kamery",
+          "control_port": "Řídicí port"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Nesprávné heslo. Použijte heslo účtu Tapo a ověřte, že je Kompatibilita s aplikacemi třetích stran zapnutá.",
+      "suspended": "Kamera po příliš mnoha neúspěšných pokusech na chvíli blokuje přihlášení. Zkuste to znovu za několik minut.",
+      "cannot_connect": "Kamera neodpověděla. Zkontrolujte její adresu a dostupnost portů 443, 554 a 2020."
+    },
+    "abort": {
+      "already_configured": "Tato kamera je již nastavena.",
+      "reauth_successful": "Znovu přihlášeno.",
+      "reconfigure_successful": "Kamera aktualizována.",
+      "wrong_camera": "Tato adresa patří jiné kameře."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Možnosti kamery Tapo",
+        "data": {
+          "scan_interval": "Interval obnovení (s)",
+          "onvif_events": "Události detekce",
+          "motion_timeout": "Bezpečnostní časový limit detekcí (s)",
+          "rtsp_transport": "Přenos RTSP",
+          "extra_ffmpeg_arguments": "Další argumenty FFmpeg pro snímky"
+        },
+        "data_description": {
+          "scan_interval": "Jak často se čtou nastavení. Detekce posílá kamera bez ohledu na tento interval.",
+          "onvif_events": "Senzory pohybu, osoby, vozidla… z událostí ONVIF kamery (port 2020).",
+          "motion_timeout": "Detekce bez nových zpráv po tuto dobu se vypne. 0 = ponechat aktivní, dokud ji kamera neukončí.",
+          "rtsp_transport": "TCP je nejspolehlivější.",
+          "extra_ffmpeg_arguments": "Přidají se k příkazu FFmpeg, který pořizuje snímky."
+        }
+      }
+    }
+  },
+  "selector": {
+    "rtsp_transport": {
+      "options": {
+        "tcp": "TCP",
+        "udp": "UDP",
+        "udp_multicast": "UDP multicast",
+        "http": "HTTP"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "event_subscription": {
+        "name": "Události detekce"
+      },
+      "motion": {
+        "name": "Pohyb"
+      },
+      "person": {
+        "name": "Osoba"
+      },
+      "vehicle": {
+        "name": "Vozidlo"
+      },
+      "pet": {
+        "name": "Domácí zvíře"
+      },
+      "line_crossing": {
+        "name": "Překročení čáry"
+      },
+      "tamper": {
+        "name": "Sabotáž"
+      },
+      "baby_cry": {
+        "name": "Pláč dítěte"
+      },
+      "bark": {
+        "name": "Štěkání"
+      },
+      "meow": {
+        "name": "Mňoukání"
+      },
+      "glass_break": {
+        "name": "Rozbití skla"
+      },
+      "package": {
+        "name": "Balík"
+      },
+      "area_intrusion": {
+        "name": "Vniknutí do oblasti"
+      },
+      "detection": {
+        "name": "Detekce {type}"
+      }
+    },
+    "button": {
+      "move_up": {
+        "name": "Nahoru"
+      },
+      "move_down": {
+        "name": "Dolů"
+      },
+      "move_left": {
+        "name": "Doleva"
+      },
+      "move_right": {
+        "name": "Doprava"
+      },
+      "calibrate": {
+        "name": "Kalibrovat"
+      },
+      "format_sd_card": {
+        "name": "Formátovat SD kartu"
+      }
+    },
+    "light": {
+      "spotlight": {
+        "name": "Reflektor"
+      },
+      "floodlight": {
+        "name": "Světlomet"
+      }
+    },
+    "number": {
+      "speaker_volume": {
+        "name": "Hlasitost reproduktoru"
+      },
+      "microphone_volume": {
+        "name": "Hlasitost mikrofonu"
+      },
+      "motion_sensitivity": {
+        "name": "Citlivost pohybu"
+      },
+      "spotlight_intensity": {
+        "name": "Intenzita reflektoru"
+      },
+      "move_angle": {
+        "name": "Krok pohybu"
+      }
+    },
+    "select": {
+      "motion_detection": {
+        "name": "Detekce pohybu",
+        "state": {
+          "off": "Vypnuto",
+          "low": "Nízká",
+          "normal": "Normální",
+          "high": "Vysoká"
+        }
+      },
+      "person_detection": {
+        "name": "Detekce osob",
+        "state": {
+          "off": "Vypnuto",
+          "low": "Nízká",
+          "normal": "Normální",
+          "high": "Vysoká"
+        }
+      },
+      "vehicle_detection": {
+        "name": "Detekce vozidel",
+        "state": {
+          "off": "Vypnuto",
+          "low": "Nízká",
+          "normal": "Normální",
+          "high": "Vysoká"
+        }
+      },
+      "pet_detection": {
+        "name": "Detekce domácích zvířat",
+        "state": {
+          "off": "Vypnuto",
+          "low": "Nízká",
+          "normal": "Normální",
+          "high": "Vysoká"
+        }
+      },
+      "package_detection": {
+        "name": "Detekce balíků",
+        "state": {
+          "off": "Vypnuto",
+          "low": "Nízká",
+          "normal": "Normální",
+          "high": "Vysoká"
+        }
+      },
+      "baby_cry_detection": {
+        "name": "Detekce pláče dítěte",
+        "state": {
+          "off": "Vypnuto",
+          "low": "Nízká",
+          "normal": "Normální",
+          "high": "Vysoká"
+        }
+      },
+      "bark_detection": {
+        "name": "Detekce štěkání",
+        "state": {
+          "off": "Vypnuto",
+          "low": "Nízká",
+          "normal": "Normální",
+          "high": "Vysoká"
+        }
+      },
+      "meow_detection": {
+        "name": "Detekce mňoukání",
+        "state": {
+          "off": "Vypnuto",
+          "low": "Nízká",
+          "normal": "Normální",
+          "high": "Vysoká"
+        }
+      },
+      "glass_break_detection": {
+        "name": "Detekce rozbití skla",
+        "state": {
+          "off": "Vypnuto",
+          "low": "Nízká",
+          "normal": "Normální",
+          "high": "Vysoká"
+        }
+      },
+      "tamper_detection": {
+        "name": "Detekce sabotáže",
+        "state": {
+          "off": "Vypnuto",
+          "low": "Nízká",
+          "normal": "Normální",
+          "high": "Vysoká"
+        }
+      },
+      "night_vision": {
+        "name": "Noční vidění",
+        "state": {
+          "inf_night_vision": "Infračervené",
+          "wtl_night_vision": "Plné barvy",
+          "md_night_vision": "Chytré",
+          "dbl_night_vision": "Dvojité světlo"
+        }
+      },
+      "day_night_mode": {
+        "name": "Režim den/noc",
+        "state": {
+          "auto": "Auto",
+          "on": "Noc",
+          "off": "Den"
+        }
+      },
+      "light_frequency": {
+        "name": "Frekvence světla",
+        "state": {
+          "auto": "Auto",
+          "50": "50 Hz",
+          "60": "60 Hz"
+        }
+      },
+      "preset": {
+        "name": "Předvolba"
+      },
+      "stream_quality": {
+        "name": "Kvalita streamu",
+        "state": {
+          "hd": "HD",
+          "sd": "SD"
+        }
+      }
+    },
+    "sensor": {
+      "ssid": {
+        "name": "Síť Wi-Fi"
+      },
+      "link_type": {
+        "name": "Typ připojení"
+      },
+      "ip_address": {
+        "name": "IP adresa"
+      },
+      "sd_card_status": {
+        "name": "Stav SD karty"
+      },
+      "sd_card_free_space": {
+        "name": "Volné místo na SD kartě"
+      },
+      "sd_card_total_space": {
+        "name": "Velikost SD karty"
+      }
+    },
+    "siren": {
+      "siren": {
+        "name": "Alarm"
+      }
+    },
+    "switch": {
+      "privacy_mode": {
+        "name": "Režim soukromí"
+      },
+      "indicator_led": {
+        "name": "Stavová LED"
+      },
+      "notifications": {
+        "name": "Oznámení"
+      },
+      "rich_notifications": {
+        "name": "Rozšířená oznámení"
+      },
+      "record_audio": {
+        "name": "Nahrávat zvuk"
+      },
+      "microphone_mute": {
+        "name": "Ztlumení mikrofonu"
+      },
+      "noise_cancelling": {
+        "name": "Potlačení šumu"
+      },
+      "lens_distortion_correction": {
+        "name": "Korekce zkreslení objektivu"
+      },
+      "flip": {
+        "name": "Převrátit obraz"
+      },
+      "auto_track": {
+        "name": "Automatické sledování"
+      },
+      "privacy_zones": {
+        "name": "Zóny soukromí"
+      },
+      "record_to_sd_card": {
+        "name": "Nahrávat na SD kartu"
+      },
+      "circular_recording": {
+        "name": "Smyčkové nahrávání"
+      },
+      "line_crossing_detection": {
+        "name": "Detekce překročení čáry"
+      },
+      "automatic_reboot": {
+        "name": "Plánovaný restart"
+      },
+      "automatic_firmware_upgrade": {
+        "name": "Automatická aktualizace firmwaru"
+      },
+      "diagnose_mode": {
+        "name": "Diagnostický režim"
+      },
+      "smart_track": {
+        "name": "Chytré sledování {type}"
+      },
+      "alarm_trigger": {
+        "name": "Alarm při {type}"
+      }
+    }
+  },
+  "exceptions": {
+    "invalid_auth": {
+      "message": "Kamera {host} odmítla přihlašovací údaje."
+    },
+    "suspended": {
+      "message": "Kamera {host} blokuje přihlášení na {seconds} s po příliš mnoha neúspěšných pokusech."
+    },
+    "cannot_connect": {
+      "message": "Kamera {host} neodpověděla: {error}"
+    },
+    "privacy_mode": {
+      "message": "Není možné, když je zapnutý režim soukromí."
+    },
+    "command_failed": {
+      "message": "Kamera {host} odmítla změnu: {error}"
+    }
+  },
+  "services": {
+    "ptz": {
+      "name": "Otočení a náklon",
+      "description": "Otočí kameru o zadané úhly od její aktuální polohy.",
+      "fields": {
+        "pan": {
+          "name": "Otočení",
+          "description": "Stupně doprava (záporné: doleva)."
+        },
+        "tilt": {
+          "name": "Náklon",
+          "description": "Stupně nahoru (záporné: dolů)."
+        }
+      }
+    },
+    "go_to_preset": {
+      "name": "Přejít na předvolbu",
+      "description": "Přesune kameru do uložené polohy.",
+      "fields": {
+        "preset": {
+          "name": "Předvolba",
+          "description": "Název nebo ID předvolby."
+        }
+      }
+    },
+    "save_preset": {
+      "name": "Uložit předvolbu",
+      "description": "Uloží aktuální polohu kamery.",
+      "fields": {
+        "name": {
+          "name": "Název",
+          "description": "Název nové předvolby."
+        }
+      }
+    },
+    "delete_preset": {
+      "name": "Smazat předvolbu",
+      "description": "Smaže uloženou polohu.",
+      "fields": {
+        "preset": {
+          "name": "Předvolba",
+          "description": "Název nebo ID předvolby."
+        }
+      }
+    }
+  }
+}

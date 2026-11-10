@@ -1,0 +1,451 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Камера Tapo",
+        "description": "У застосунку Tapo увімкніть Сумісність зі сторонніми сервісами (у розділі Я), потім створіть обліковий запис камери в розширених налаштуваннях камери.",
+        "data": {
+          "host": "Хост",
+          "cloud_password": "Пароль облікового запису Tapo",
+          "username": "Ім'я користувача облікового запису камери",
+          "password": "Пароль облікового запису камери",
+          "control_port": "Порт керування"
+        },
+        "data_description": {
+          "host": "IP-адреса камери. Призначте їй постійну адресу в роутері.",
+          "cloud_password": "Пароль облікового запису TP-Link, до якого додано камеру; використовується для її налаштувань.",
+          "username": "Обліковий запис камери для відеопотоків і подій виявлення.",
+          "password": "Пароль облікового запису камери.",
+          "control_port": "443 для камер і дверних дзвінків."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Повторний вхід",
+        "description": "Камера {host} відхилила облікові дані.",
+        "data": {
+          "cloud_password": "Пароль облікового запису Tapo",
+          "username": "Ім'я користувача облікового запису камери",
+          "password": "Пароль облікового запису камери"
+        }
+      },
+      "reconfigure": {
+        "title": "Камера Tapo",
+        "data": {
+          "host": "Хост",
+          "cloud_password": "Пароль облікового запису Tapo",
+          "username": "Ім'я користувача облікового запису камери",
+          "password": "Пароль облікового запису камери",
+          "control_port": "Порт керування"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Невірний пароль. Використовуйте пароль облікового запису Tapo і перевірте, що Сумісність зі сторонніми сервісами увімкнена.",
+      "suspended": "Після надто багатьох невдалих спроб камера на певний час блокує вхід. Спробуйте за кілька хвилин.",
+      "cannot_connect": "Камера не відповіла. Перевірте її адресу та доступність портів 443, 554 і 2020."
+    },
+    "abort": {
+      "already_configured": "Цю камеру вже налаштовано.",
+      "reauth_successful": "Вхід виконано повторно.",
+      "reconfigure_successful": "Камеру оновлено.",
+      "wrong_camera": "Ця адреса належить іншій камері."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Параметри камери Tapo",
+        "data": {
+          "scan_interval": "Інтервал оновлення (с)",
+          "onvif_events": "Події виявлення",
+          "motion_timeout": "Захисний тайм-аут виявлень (с)",
+          "rtsp_transport": "Транспорт RTSP",
+          "extra_ffmpeg_arguments": "Додаткові аргументи FFmpeg для знімків"
+        },
+        "data_description": {
+          "scan_interval": "Як часто зчитуються налаштування. Виявлення камера надсилає сама, незалежно від цього інтервалу.",
+          "onvif_events": "Датчики руху, людини, транспорту… з подій ONVIF камери (порт 2020).",
+          "motion_timeout": "Виявлення без новин протягом цього часу вимикається. 0 — залишати активним, доки камера його не завершить.",
+          "rtsp_transport": "TCP — найнадійніший.",
+          "extra_ffmpeg_arguments": "Додаються до команди FFmpeg, що робить знімки."
+        }
+      }
+    }
+  },
+  "selector": {
+    "rtsp_transport": {
+      "options": {
+        "tcp": "TCP",
+        "udp": "UDP",
+        "udp_multicast": "UDP multicast",
+        "http": "HTTP"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "event_subscription": {
+        "name": "Події виявлення"
+      },
+      "motion": {
+        "name": "Рух"
+      },
+      "person": {
+        "name": "Людина"
+      },
+      "vehicle": {
+        "name": "Транспорт"
+      },
+      "pet": {
+        "name": "Улюбленець"
+      },
+      "line_crossing": {
+        "name": "Перетин лінії"
+      },
+      "tamper": {
+        "name": "Втручання"
+      },
+      "baby_cry": {
+        "name": "Плач дитини"
+      },
+      "bark": {
+        "name": "Гавкіт"
+      },
+      "meow": {
+        "name": "Нявкання"
+      },
+      "glass_break": {
+        "name": "Розбиття скла"
+      },
+      "package": {
+        "name": "Посилка"
+      },
+      "area_intrusion": {
+        "name": "Вторгнення в зону"
+      },
+      "detection": {
+        "name": "Виявлення {type}"
+      }
+    },
+    "button": {
+      "move_up": {
+        "name": "Вгору"
+      },
+      "move_down": {
+        "name": "Вниз"
+      },
+      "move_left": {
+        "name": "Ліворуч"
+      },
+      "move_right": {
+        "name": "Праворуч"
+      },
+      "calibrate": {
+        "name": "Калібрувати"
+      },
+      "format_sd_card": {
+        "name": "Форматувати SD-карту"
+      }
+    },
+    "light": {
+      "spotlight": {
+        "name": "Прожектор"
+      },
+      "floodlight": {
+        "name": "Заливне світло"
+      }
+    },
+    "number": {
+      "speaker_volume": {
+        "name": "Гучність динаміка"
+      },
+      "microphone_volume": {
+        "name": "Гучність мікрофона"
+      },
+      "motion_sensitivity": {
+        "name": "Чутливість до руху"
+      },
+      "spotlight_intensity": {
+        "name": "Яскравість прожектора"
+      },
+      "move_angle": {
+        "name": "Крок переміщення"
+      }
+    },
+    "select": {
+      "motion_detection": {
+        "name": "Виявлення руху",
+        "state": {
+          "off": "Вимк.",
+          "low": "Низька",
+          "normal": "Звичайна",
+          "high": "Висока"
+        }
+      },
+      "person_detection": {
+        "name": "Виявлення людей",
+        "state": {
+          "off": "Вимк.",
+          "low": "Низька",
+          "normal": "Звичайна",
+          "high": "Висока"
+        }
+      },
+      "vehicle_detection": {
+        "name": "Виявлення транспорту",
+        "state": {
+          "off": "Вимк.",
+          "low": "Низька",
+          "normal": "Звичайна",
+          "high": "Висока"
+        }
+      },
+      "pet_detection": {
+        "name": "Виявлення улюбленців",
+        "state": {
+          "off": "Вимк.",
+          "low": "Низька",
+          "normal": "Звичайна",
+          "high": "Висока"
+        }
+      },
+      "package_detection": {
+        "name": "Виявлення посилок",
+        "state": {
+          "off": "Вимк.",
+          "low": "Низька",
+          "normal": "Звичайна",
+          "high": "Висока"
+        }
+      },
+      "baby_cry_detection": {
+        "name": "Виявлення плачу дитини",
+        "state": {
+          "off": "Вимк.",
+          "low": "Низька",
+          "normal": "Звичайна",
+          "high": "Висока"
+        }
+      },
+      "bark_detection": {
+        "name": "Виявлення гавкоту",
+        "state": {
+          "off": "Вимк.",
+          "low": "Низька",
+          "normal": "Звичайна",
+          "high": "Висока"
+        }
+      },
+      "meow_detection": {
+        "name": "Виявлення нявкання",
+        "state": {
+          "off": "Вимк.",
+          "low": "Низька",
+          "normal": "Звичайна",
+          "high": "Висока"
+        }
+      },
+      "glass_break_detection": {
+        "name": "Виявлення розбиття скла",
+        "state": {
+          "off": "Вимк.",
+          "low": "Низька",
+          "normal": "Звичайна",
+          "high": "Висока"
+        }
+      },
+      "tamper_detection": {
+        "name": "Виявлення втручання",
+        "state": {
+          "off": "Вимк.",
+          "low": "Низька",
+          "normal": "Звичайна",
+          "high": "Висока"
+        }
+      },
+      "night_vision": {
+        "name": "Нічне бачення",
+        "state": {
+          "inf_night_vision": "Інфрачервоне",
+          "wtl_night_vision": "Повнокольорове",
+          "md_night_vision": "Розумне",
+          "dbl_night_vision": "Подвійне підсвічування"
+        }
+      },
+      "day_night_mode": {
+        "name": "Режим день/ніч",
+        "state": {
+          "auto": "Авто",
+          "on": "Ніч",
+          "off": "День"
+        }
+      },
+      "light_frequency": {
+        "name": "Частота освітлення",
+        "state": {
+          "auto": "Авто",
+          "50": "50 Hz",
+          "60": "60 Hz"
+        }
+      },
+      "preset": {
+        "name": "Передустановка"
+      },
+      "stream_quality": {
+        "name": "Якість потоку",
+        "state": {
+          "hd": "HD",
+          "sd": "SD"
+        }
+      }
+    },
+    "sensor": {
+      "ssid": {
+        "name": "Мережа Wi-Fi"
+      },
+      "link_type": {
+        "name": "Тип підключення"
+      },
+      "ip_address": {
+        "name": "IP-адреса"
+      },
+      "sd_card_status": {
+        "name": "Стан SD-карти"
+      },
+      "sd_card_free_space": {
+        "name": "Вільно на SD-карті"
+      },
+      "sd_card_total_space": {
+        "name": "Обсяг SD-карти"
+      }
+    },
+    "siren": {
+      "siren": {
+        "name": "Тривога"
+      }
+    },
+    "switch": {
+      "privacy_mode": {
+        "name": "Режим конфіденційності"
+      },
+      "indicator_led": {
+        "name": "Індикатор стану"
+      },
+      "notifications": {
+        "name": "Сповіщення"
+      },
+      "rich_notifications": {
+        "name": "Розширені сповіщення"
+      },
+      "record_audio": {
+        "name": "Записувати звук"
+      },
+      "microphone_mute": {
+        "name": "Мікрофон вимкнено"
+      },
+      "noise_cancelling": {
+        "name": "Шумозаглушення"
+      },
+      "lens_distortion_correction": {
+        "name": "Корекція спотворень об'єктива"
+      },
+      "flip": {
+        "name": "Перевернути зображення"
+      },
+      "auto_track": {
+        "name": "Автоматичне стеження"
+      },
+      "privacy_zones": {
+        "name": "Зони конфіденційності"
+      },
+      "record_to_sd_card": {
+        "name": "Запис на SD-карту"
+      },
+      "circular_recording": {
+        "name": "Циклічний запис"
+      },
+      "line_crossing_detection": {
+        "name": "Виявлення перетину лінії"
+      },
+      "automatic_reboot": {
+        "name": "Перезавантаження за розкладом"
+      },
+      "automatic_firmware_upgrade": {
+        "name": "Автооновлення прошивки"
+      },
+      "diagnose_mode": {
+        "name": "Режим діагностики"
+      },
+      "smart_track": {
+        "name": "Розумне стеження {type}"
+      },
+      "alarm_trigger": {
+        "name": "Тривога при {type}"
+      }
+    }
+  },
+  "exceptions": {
+    "invalid_auth": {
+      "message": "Камера {host} відхилила облікові дані."
+    },
+    "suspended": {
+      "message": "Камера {host} блокує вхід на {seconds} с після надто багатьох невдалих спроб."
+    },
+    "cannot_connect": {
+      "message": "Камера {host} не відповіла: {error}"
+    },
+    "privacy_mode": {
+      "message": "Неможливо, поки увімкнено режим конфіденційності."
+    },
+    "command_failed": {
+      "message": "Камера {host} відхилила зміну: {error}"
+    }
+  },
+  "services": {
+    "ptz": {
+      "name": "Поворот і нахил",
+      "description": "Повертає камеру на задані кути від поточного положення.",
+      "fields": {
+        "pan": {
+          "name": "Поворот",
+          "description": "Градуси праворуч (від'ємні: ліворуч)."
+        },
+        "tilt": {
+          "name": "Нахил",
+          "description": "Градуси вгору (від'ємні: вниз)."
+        }
+      }
+    },
+    "go_to_preset": {
+      "name": "Перейти до передустановки",
+      "description": "Переміщує камеру в збережене положення.",
+      "fields": {
+        "preset": {
+          "name": "Передустановка",
+          "description": "Назва або ID передустановки."
+        }
+      }
+    },
+    "save_preset": {
+      "name": "Зберегти передустановку",
+      "description": "Зберігає поточне положення камери.",
+      "fields": {
+        "name": {
+          "name": "Назва",
+          "description": "Назва нової передустановки."
+        }
+      }
+    },
+    "delete_preset": {
+      "name": "Видалити передустановку",
+      "description": "Видаляє збережене положення.",
+      "fields": {
+        "preset": {
+          "name": "Передустановка",
+          "description": "Назва або ID передустановки."
+        }
+      }
+    }
+  }
+}

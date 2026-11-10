@@ -1,0 +1,451 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Kamera Tapo",
+        "description": "W aplikacji Tapo włącz Zgodność z usługami innych firm (w zakładce Ja), a następnie utwórz konto kamery w Ustawieniach zaawansowanych kamery.",
+        "data": {
+          "host": "Host",
+          "cloud_password": "Hasło konta Tapo",
+          "username": "Nazwa użytkownika konta kamery",
+          "password": "Hasło konta kamery",
+          "control_port": "Port sterowania"
+        },
+        "data_description": {
+          "host": "Adres IP kamery. Przypisz jej stały adres w routerze.",
+          "cloud_password": "Hasło konta TP-Link, do którego dodano kamerę, używane do jej ustawień.",
+          "username": "Konto kamery, używane do strumieni wideo i zdarzeń wykrywania.",
+          "password": "Hasło konta kamery.",
+          "control_port": "443 dla kamer i dzwonków."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Zaloguj się ponownie",
+        "description": "Kamera {host} odrzuciła dane logowania.",
+        "data": {
+          "cloud_password": "Hasło konta Tapo",
+          "username": "Nazwa użytkownika konta kamery",
+          "password": "Hasło konta kamery"
+        }
+      },
+      "reconfigure": {
+        "title": "Kamera Tapo",
+        "data": {
+          "host": "Host",
+          "cloud_password": "Hasło konta Tapo",
+          "username": "Nazwa użytkownika konta kamery",
+          "password": "Hasło konta kamery",
+          "control_port": "Port sterowania"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Błędne hasło. Użyj hasła konta Tapo i sprawdź, czy Zgodność z usługami innych firm jest włączona.",
+      "suspended": "Po zbyt wielu nieudanych próbach kamera blokuje logowanie na jakiś czas. Spróbuj ponownie za kilka minut.",
+      "cannot_connect": "Kamera nie odpowiedziała. Sprawdź jej adres oraz czy porty 443, 554 i 2020 są osiągalne."
+    },
+    "abort": {
+      "already_configured": "Ta kamera jest już skonfigurowana.",
+      "reauth_successful": "Zalogowano ponownie.",
+      "reconfigure_successful": "Kamera zaktualizowana.",
+      "wrong_camera": "Ten adres należy do innej kamery."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opcje kamery Tapo",
+        "data": {
+          "scan_interval": "Interwał odświeżania (s)",
+          "onvif_events": "Zdarzenia wykrywania",
+          "motion_timeout": "Limit bezpieczeństwa wykryć (s)",
+          "rtsp_transport": "Transport RTSP",
+          "extra_ffmpeg_arguments": "Dodatkowe argumenty FFmpeg dla zrzutów"
+        },
+        "data_description": {
+          "scan_interval": "Jak często odczytywane są ustawienia. Wykrycia są wysyłane przez kamerę niezależnie od tego interwału.",
+          "onvif_events": "Czujniki ruchu, osoby, pojazdu… ze zdarzeń ONVIF kamery (port 2020).",
+          "motion_timeout": "Wykrycie bez nowych informacji przez ten czas zostaje wyłączone. 0, aby było aktywne, dopóki kamera go nie zakończy.",
+          "rtsp_transport": "TCP jest najbardziej niezawodny.",
+          "extra_ffmpeg_arguments": "Dodawane do polecenia FFmpeg wykonującego zrzuty."
+        }
+      }
+    }
+  },
+  "selector": {
+    "rtsp_transport": {
+      "options": {
+        "tcp": "TCP",
+        "udp": "UDP",
+        "udp_multicast": "UDP multicast",
+        "http": "HTTP"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "event_subscription": {
+        "name": "Zdarzenia wykrywania"
+      },
+      "motion": {
+        "name": "Ruch"
+      },
+      "person": {
+        "name": "Osoba"
+      },
+      "vehicle": {
+        "name": "Pojazd"
+      },
+      "pet": {
+        "name": "Zwierzę"
+      },
+      "line_crossing": {
+        "name": "Przekroczenie linii"
+      },
+      "tamper": {
+        "name": "Sabotaż"
+      },
+      "baby_cry": {
+        "name": "Płacz dziecka"
+      },
+      "bark": {
+        "name": "Szczekanie"
+      },
+      "meow": {
+        "name": "Miauczenie"
+      },
+      "glass_break": {
+        "name": "Tłuczenie szkła"
+      },
+      "package": {
+        "name": "Paczka"
+      },
+      "area_intrusion": {
+        "name": "Wtargnięcie do strefy"
+      },
+      "detection": {
+        "name": "Wykrycie {type}"
+      }
+    },
+    "button": {
+      "move_up": {
+        "name": "W górę"
+      },
+      "move_down": {
+        "name": "W dół"
+      },
+      "move_left": {
+        "name": "W lewo"
+      },
+      "move_right": {
+        "name": "W prawo"
+      },
+      "calibrate": {
+        "name": "Kalibruj"
+      },
+      "format_sd_card": {
+        "name": "Formatuj kartę SD"
+      }
+    },
+    "light": {
+      "spotlight": {
+        "name": "Reflektor"
+      },
+      "floodlight": {
+        "name": "Lampa zalewowa"
+      }
+    },
+    "number": {
+      "speaker_volume": {
+        "name": "Głośność głośnika"
+      },
+      "microphone_volume": {
+        "name": "Głośność mikrofonu"
+      },
+      "motion_sensitivity": {
+        "name": "Czułość ruchu"
+      },
+      "spotlight_intensity": {
+        "name": "Jasność reflektora"
+      },
+      "move_angle": {
+        "name": "Krok ruchu"
+      }
+    },
+    "select": {
+      "motion_detection": {
+        "name": "Wykrywanie ruchu",
+        "state": {
+          "off": "Wyłączone",
+          "low": "Niska",
+          "normal": "Normalna",
+          "high": "Wysoka"
+        }
+      },
+      "person_detection": {
+        "name": "Wykrywanie osób",
+        "state": {
+          "off": "Wyłączone",
+          "low": "Niska",
+          "normal": "Normalna",
+          "high": "Wysoka"
+        }
+      },
+      "vehicle_detection": {
+        "name": "Wykrywanie pojazdów",
+        "state": {
+          "off": "Wyłączone",
+          "low": "Niska",
+          "normal": "Normalna",
+          "high": "Wysoka"
+        }
+      },
+      "pet_detection": {
+        "name": "Wykrywanie zwierząt",
+        "state": {
+          "off": "Wyłączone",
+          "low": "Niska",
+          "normal": "Normalna",
+          "high": "Wysoka"
+        }
+      },
+      "package_detection": {
+        "name": "Wykrywanie paczek",
+        "state": {
+          "off": "Wyłączone",
+          "low": "Niska",
+          "normal": "Normalna",
+          "high": "Wysoka"
+        }
+      },
+      "baby_cry_detection": {
+        "name": "Wykrywanie płaczu dziecka",
+        "state": {
+          "off": "Wyłączone",
+          "low": "Niska",
+          "normal": "Normalna",
+          "high": "Wysoka"
+        }
+      },
+      "bark_detection": {
+        "name": "Wykrywanie szczekania",
+        "state": {
+          "off": "Wyłączone",
+          "low": "Niska",
+          "normal": "Normalna",
+          "high": "Wysoka"
+        }
+      },
+      "meow_detection": {
+        "name": "Wykrywanie miauczenia",
+        "state": {
+          "off": "Wyłączone",
+          "low": "Niska",
+          "normal": "Normalna",
+          "high": "Wysoka"
+        }
+      },
+      "glass_break_detection": {
+        "name": "Wykrywanie tłuczenia szkła",
+        "state": {
+          "off": "Wyłączone",
+          "low": "Niska",
+          "normal": "Normalna",
+          "high": "Wysoka"
+        }
+      },
+      "tamper_detection": {
+        "name": "Wykrywanie sabotażu",
+        "state": {
+          "off": "Wyłączone",
+          "low": "Niska",
+          "normal": "Normalna",
+          "high": "Wysoka"
+        }
+      },
+      "night_vision": {
+        "name": "Widzenie nocne",
+        "state": {
+          "inf_night_vision": "Podczerwień",
+          "wtl_night_vision": "Pełny kolor",
+          "md_night_vision": "Inteligentne",
+          "dbl_night_vision": "Podwójne światło"
+        }
+      },
+      "day_night_mode": {
+        "name": "Tryb dzień/noc",
+        "state": {
+          "auto": "Auto",
+          "on": "Noc",
+          "off": "Dzień"
+        }
+      },
+      "light_frequency": {
+        "name": "Częstotliwość światła",
+        "state": {
+          "auto": "Auto",
+          "50": "50 Hz",
+          "60": "60 Hz"
+        }
+      },
+      "preset": {
+        "name": "Pozycja zapisana"
+      },
+      "stream_quality": {
+        "name": "Jakość strumienia",
+        "state": {
+          "hd": "HD",
+          "sd": "SD"
+        }
+      }
+    },
+    "sensor": {
+      "ssid": {
+        "name": "Sieć Wi-Fi"
+      },
+      "link_type": {
+        "name": "Typ połączenia"
+      },
+      "ip_address": {
+        "name": "Adres IP"
+      },
+      "sd_card_status": {
+        "name": "Stan karty SD"
+      },
+      "sd_card_free_space": {
+        "name": "Wolne miejsce na karcie SD"
+      },
+      "sd_card_total_space": {
+        "name": "Rozmiar karty SD"
+      }
+    },
+    "siren": {
+      "siren": {
+        "name": "Alarm"
+      }
+    },
+    "switch": {
+      "privacy_mode": {
+        "name": "Tryb prywatności"
+      },
+      "indicator_led": {
+        "name": "Dioda stanu"
+      },
+      "notifications": {
+        "name": "Powiadomienia"
+      },
+      "rich_notifications": {
+        "name": "Rozszerzone powiadomienia"
+      },
+      "record_audio": {
+        "name": "Nagrywaj dźwięk"
+      },
+      "microphone_mute": {
+        "name": "Wyciszenie mikrofonu"
+      },
+      "noise_cancelling": {
+        "name": "Redukcja szumów"
+      },
+      "lens_distortion_correction": {
+        "name": "Korekcja zniekształceń obiektywu"
+      },
+      "flip": {
+        "name": "Odwróć obraz"
+      },
+      "auto_track": {
+        "name": "Automatyczne śledzenie"
+      },
+      "privacy_zones": {
+        "name": "Strefy prywatności"
+      },
+      "record_to_sd_card": {
+        "name": "Nagrywaj na kartę SD"
+      },
+      "circular_recording": {
+        "name": "Nagrywanie w pętli"
+      },
+      "line_crossing_detection": {
+        "name": "Wykrywanie przekroczenia linii"
+      },
+      "automatic_reboot": {
+        "name": "Zaplanowany restart"
+      },
+      "automatic_firmware_upgrade": {
+        "name": "Automatyczna aktualizacja oprogramowania"
+      },
+      "diagnose_mode": {
+        "name": "Tryb diagnostyczny"
+      },
+      "smart_track": {
+        "name": "Inteligentne śledzenie {type}"
+      },
+      "alarm_trigger": {
+        "name": "Alarm przy {type}"
+      }
+    }
+  },
+  "exceptions": {
+    "invalid_auth": {
+      "message": "Kamera {host} odrzuciła dane logowania."
+    },
+    "suspended": {
+      "message": "Kamera {host} blokuje logowanie na {seconds} s po zbyt wielu nieudanych próbach."
+    },
+    "cannot_connect": {
+      "message": "Kamera {host} nie odpowiedziała: {error}"
+    },
+    "privacy_mode": {
+      "message": "Niemożliwe, gdy tryb prywatności jest włączony."
+    },
+    "command_failed": {
+      "message": "Kamera {host} odrzuciła zmianę: {error}"
+    }
+  },
+  "services": {
+    "ptz": {
+      "name": "Obrót i pochylenie",
+      "description": "Obraca kamerę o podane kąty względem jej bieżącej pozycji.",
+      "fields": {
+        "pan": {
+          "name": "Obrót",
+          "description": "Stopnie w prawo (ujemne: w lewo)."
+        },
+        "tilt": {
+          "name": "Pochylenie",
+          "description": "Stopnie w górę (ujemne: w dół)."
+        }
+      }
+    },
+    "go_to_preset": {
+      "name": "Przejdź do pozycji",
+      "description": "Przesuwa kamerę do zapisanej pozycji.",
+      "fields": {
+        "preset": {
+          "name": "Pozycja zapisana",
+          "description": "Nazwa lub ID pozycji."
+        }
+      }
+    },
+    "save_preset": {
+      "name": "Zapisz pozycję",
+      "description": "Zapisuje bieżącą pozycję kamery.",
+      "fields": {
+        "name": {
+          "name": "Nazwa",
+          "description": "Nazwa nowej pozycji."
+        }
+      }
+    },
+    "delete_preset": {
+      "name": "Usuń pozycję",
+      "description": "Usuwa zapisaną pozycję.",
+      "fields": {
+        "preset": {
+          "name": "Pozycja zapisana",
+          "description": "Nazwa lub ID pozycji."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,451 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Tapo kamera",
+        "description": "A Tapo alkalmazásban kapcsold be a Harmadik féltől származó kompatibilitást (az Én menüben), majd hozz létre egy kamerafiókot a kamera speciális beállításaiban.",
+        "data": {
+          "host": "Gazdagép",
+          "cloud_password": "Tapo-fiók jelszava",
+          "username": "Kamerafiók felhasználóneve",
+          "password": "Kamerafiók jelszava",
+          "control_port": "Vezérlőport"
+        },
+        "data_description": {
+          "host": "A kamera IP-címe. Adj neki fix címet a routerben.",
+          "cloud_password": "Annak a TP-Link-fióknak a jelszava, amelyhez a kamera hozzá van adva; a beállításaihoz használjuk.",
+          "username": "Kamerafiók, a videofolyamokhoz és az észlelési eseményekhez.",
+          "password": "A kamerafiók jelszava.",
+          "control_port": "443 kamerákhoz és csengőkhöz."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Bejelentkezés újra",
+        "description": "A(z) {host} kamera elutasította a hitelesítő adatokat.",
+        "data": {
+          "cloud_password": "Tapo-fiók jelszava",
+          "username": "Kamerafiók felhasználóneve",
+          "password": "Kamerafiók jelszava"
+        }
+      },
+      "reconfigure": {
+        "title": "Tapo kamera",
+        "data": {
+          "host": "Gazdagép",
+          "cloud_password": "Tapo-fiók jelszava",
+          "username": "Kamerafiók felhasználóneve",
+          "password": "Kamerafiók jelszava",
+          "control_port": "Vezérlőport"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Hibás jelszó. A Tapo-fiók jelszavát használd, és ellenőrizd, hogy a Harmadik féltől származó kompatibilitás be van-e kapcsolva.",
+      "suspended": "Túl sok sikertelen próbálkozás után a kamera egy ideig letiltja a bejelentkezést. Próbáld újra néhány perc múlva.",
+      "cannot_connect": "A kamera nem válaszolt. Ellenőrizd a címét, és hogy a 443-as, 554-es és 2020-as port elérhető-e."
+    },
+    "abort": {
+      "already_configured": "Ez a kamera már be van állítva.",
+      "reauth_successful": "Újra bejelentkezve.",
+      "reconfigure_successful": "Kamera frissítve.",
+      "wrong_camera": "Ez a cím egy másik kameráé."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Tapo kamera beállításai",
+        "data": {
+          "scan_interval": "Frissítési időköz (s)",
+          "onvif_events": "Észlelési események",
+          "motion_timeout": "Észlelések biztonsági időkorlátja (s)",
+          "rtsp_transport": "RTSP-átvitel",
+          "extra_ffmpeg_arguments": "További FFmpeg-argumentumok a pillanatképekhez"
+        },
+        "data_description": {
+          "scan_interval": "Milyen gyakran olvassuk a beállításokat. Az észleléseket a kamera küldi, ettől az időköztől függetlenül.",
+          "onvif_events": "Mozgás-, személy-, járműérzékelők… a kamera ONVIF-eseményeiből (2020-as port).",
+          "motion_timeout": "Az ennyi ideje hír nélküli észlelés kikapcsol. 0: aktív marad, amíg a kamera be nem fejezi.",
+          "rtsp_transport": "A TCP a legmegbízhatóbb.",
+          "extra_ffmpeg_arguments": "A pillanatképeket készítő FFmpeg-parancshoz adódnak."
+        }
+      }
+    }
+  },
+  "selector": {
+    "rtsp_transport": {
+      "options": {
+        "tcp": "TCP",
+        "udp": "UDP",
+        "udp_multicast": "UDP multicast",
+        "http": "HTTP"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "event_subscription": {
+        "name": "Észlelési események"
+      },
+      "motion": {
+        "name": "Mozgás"
+      },
+      "person": {
+        "name": "Személy"
+      },
+      "vehicle": {
+        "name": "Jármű"
+      },
+      "pet": {
+        "name": "Háziállat"
+      },
+      "line_crossing": {
+        "name": "Vonalátlépés"
+      },
+      "tamper": {
+        "name": "Szabotázs"
+      },
+      "baby_cry": {
+        "name": "Babasírás"
+      },
+      "bark": {
+        "name": "Ugatás"
+      },
+      "meow": {
+        "name": "Nyávogás"
+      },
+      "glass_break": {
+        "name": "Üvegtörés"
+      },
+      "package": {
+        "name": "Csomag"
+      },
+      "area_intrusion": {
+        "name": "Behatolás a területre"
+      },
+      "detection": {
+        "name": "Észlelés: {type}"
+      }
+    },
+    "button": {
+      "move_up": {
+        "name": "Fel"
+      },
+      "move_down": {
+        "name": "Le"
+      },
+      "move_left": {
+        "name": "Balra"
+      },
+      "move_right": {
+        "name": "Jobbra"
+      },
+      "calibrate": {
+        "name": "Kalibrálás"
+      },
+      "format_sd_card": {
+        "name": "SD-kártya formázása"
+      }
+    },
+    "light": {
+      "spotlight": {
+        "name": "Spotlámpa"
+      },
+      "floodlight": {
+        "name": "Reflektor"
+      }
+    },
+    "number": {
+      "speaker_volume": {
+        "name": "Hangszóró hangereje"
+      },
+      "microphone_volume": {
+        "name": "Mikrofon hangereje"
+      },
+      "motion_sensitivity": {
+        "name": "Mozgásérzékenység"
+      },
+      "spotlight_intensity": {
+        "name": "Spotlámpa erőssége"
+      },
+      "move_angle": {
+        "name": "Mozgatási lépés"
+      }
+    },
+    "select": {
+      "motion_detection": {
+        "name": "Mozgásérzékelés",
+        "state": {
+          "off": "Ki",
+          "low": "Alacsony",
+          "normal": "Normál",
+          "high": "Magas"
+        }
+      },
+      "person_detection": {
+        "name": "Személyérzékelés",
+        "state": {
+          "off": "Ki",
+          "low": "Alacsony",
+          "normal": "Normál",
+          "high": "Magas"
+        }
+      },
+      "vehicle_detection": {
+        "name": "Járműérzékelés",
+        "state": {
+          "off": "Ki",
+          "low": "Alacsony",
+          "normal": "Normál",
+          "high": "Magas"
+        }
+      },
+      "pet_detection": {
+        "name": "Háziállat-érzékelés",
+        "state": {
+          "off": "Ki",
+          "low": "Alacsony",
+          "normal": "Normál",
+          "high": "Magas"
+        }
+      },
+      "package_detection": {
+        "name": "Csomagérzékelés",
+        "state": {
+          "off": "Ki",
+          "low": "Alacsony",
+          "normal": "Normál",
+          "high": "Magas"
+        }
+      },
+      "baby_cry_detection": {
+        "name": "Babasírás-érzékelés",
+        "state": {
+          "off": "Ki",
+          "low": "Alacsony",
+          "normal": "Normál",
+          "high": "Magas"
+        }
+      },
+      "bark_detection": {
+        "name": "Ugatásérzékelés",
+        "state": {
+          "off": "Ki",
+          "low": "Alacsony",
+          "normal": "Normál",
+          "high": "Magas"
+        }
+      },
+      "meow_detection": {
+        "name": "Nyávogásérzékelés",
+        "state": {
+          "off": "Ki",
+          "low": "Alacsony",
+          "normal": "Normál",
+          "high": "Magas"
+        }
+      },
+      "glass_break_detection": {
+        "name": "Üvegtörés-érzékelés",
+        "state": {
+          "off": "Ki",
+          "low": "Alacsony",
+          "normal": "Normál",
+          "high": "Magas"
+        }
+      },
+      "tamper_detection": {
+        "name": "Szabotázsérzékelés",
+        "state": {
+          "off": "Ki",
+          "low": "Alacsony",
+          "normal": "Normál",
+          "high": "Magas"
+        }
+      },
+      "night_vision": {
+        "name": "Éjjellátó",
+        "state": {
+          "inf_night_vision": "Infravörös",
+          "wtl_night_vision": "Teljes szín",
+          "md_night_vision": "Intelligens",
+          "dbl_night_vision": "Kettős fény"
+        }
+      },
+      "day_night_mode": {
+        "name": "Nappali/éjszakai mód",
+        "state": {
+          "auto": "Automatikus",
+          "on": "Éjszaka",
+          "off": "Nappal"
+        }
+      },
+      "light_frequency": {
+        "name": "Fényfrekvencia",
+        "state": {
+          "auto": "Automatikus",
+          "50": "50 Hz",
+          "60": "60 Hz"
+        }
+      },
+      "preset": {
+        "name": "Előbeállítás"
+      },
+      "stream_quality": {
+        "name": "Folyam minősége",
+        "state": {
+          "hd": "HD",
+          "sd": "SD"
+        }
+      }
+    },
+    "sensor": {
+      "ssid": {
+        "name": "Wi-Fi-hálózat"
+      },
+      "link_type": {
+        "name": "Kapcsolat típusa"
+      },
+      "ip_address": {
+        "name": "IP-cím"
+      },
+      "sd_card_status": {
+        "name": "SD-kártya állapota"
+      },
+      "sd_card_free_space": {
+        "name": "SD-kártya szabad helye"
+      },
+      "sd_card_total_space": {
+        "name": "SD-kártya mérete"
+      }
+    },
+    "siren": {
+      "siren": {
+        "name": "Riasztás"
+      }
+    },
+    "switch": {
+      "privacy_mode": {
+        "name": "Adatvédelmi mód"
+      },
+      "indicator_led": {
+        "name": "Állapotjelző LED"
+      },
+      "notifications": {
+        "name": "Értesítések"
+      },
+      "rich_notifications": {
+        "name": "Bővített értesítések"
+      },
+      "record_audio": {
+        "name": "Hangfelvétel"
+      },
+      "microphone_mute": {
+        "name": "Mikrofon némítása"
+      },
+      "noise_cancelling": {
+        "name": "Zajcsökkentés"
+      },
+      "lens_distortion_correction": {
+        "name": "Objektívtorzítás-korrekció"
+      },
+      "flip": {
+        "name": "Kép tükrözése"
+      },
+      "auto_track": {
+        "name": "Automatikus követés"
+      },
+      "privacy_zones": {
+        "name": "Adatvédelmi zónák"
+      },
+      "record_to_sd_card": {
+        "name": "Felvétel SD-kártyára"
+      },
+      "circular_recording": {
+        "name": "Folyamatos felvétel"
+      },
+      "line_crossing_detection": {
+        "name": "Vonalátlépés-érzékelés"
+      },
+      "automatic_reboot": {
+        "name": "Ütemezett újraindítás"
+      },
+      "automatic_firmware_upgrade": {
+        "name": "Automatikus firmware-frissítés"
+      },
+      "diagnose_mode": {
+        "name": "Diagnosztikai mód"
+      },
+      "smart_track": {
+        "name": "Intelligens követés: {type}"
+      },
+      "alarm_trigger": {
+        "name": "Riasztás: {type}"
+      }
+    }
+  },
+  "exceptions": {
+    "invalid_auth": {
+      "message": "A(z) {host} kamera elutasította a hitelesítő adatokat."
+    },
+    "suspended": {
+      "message": "A(z) {host} kamera túl sok sikertelen próbálkozás után {seconds} s-ig letiltja a bejelentkezést."
+    },
+    "cannot_connect": {
+      "message": "A(z) {host} kamera nem válaszolt: {error}"
+    },
+    "privacy_mode": {
+      "message": "Nem lehetséges, amíg az adatvédelmi mód be van kapcsolva."
+    },
+    "command_failed": {
+      "message": "A(z) {host} kamera elutasította a módosítást: {error}"
+    }
+  },
+  "services": {
+    "ptz": {
+      "name": "Forgatás és döntés",
+      "description": "Elforgatja a kamerát a megadott szögekkel a jelenlegi helyzetéből.",
+      "fields": {
+        "pan": {
+          "name": "Forgatás",
+          "description": "Fok jobbra (negatív: balra)."
+        },
+        "tilt": {
+          "name": "Döntés",
+          "description": "Fok felfelé (negatív: lefelé)."
+        }
+      }
+    },
+    "go_to_preset": {
+      "name": "Ugrás előbeállításra",
+      "description": "A kamerát egy mentett helyzetbe mozgatja.",
+      "fields": {
+        "preset": {
+          "name": "Előbeállítás",
+          "description": "Az előbeállítás neve vagy azonosítója."
+        }
+      }
+    },
+    "save_preset": {
+      "name": "Előbeállítás mentése",
+      "description": "Menti a kamera jelenlegi helyzetét.",
+      "fields": {
+        "name": {
+          "name": "Név",
+          "description": "Az új előbeállítás neve."
+        }
+      }
+    },
+    "delete_preset": {
+      "name": "Előbeállítás törlése",
+      "description": "Töröl egy mentett helyzetet.",
+      "fields": {
+        "preset": {
+          "name": "Előbeállítás",
+          "description": "Az előbeállítás neve vagy azonosítója."
+        }
+      }
+    }
+  }
+}

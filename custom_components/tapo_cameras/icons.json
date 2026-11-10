@@ -1,0 +1,259 @@
+{
+  "entity": {
+    "binary_sensor": {
+      "event_subscription": {
+        "default": "mdi:access-point-network"
+      },
+      "person": {
+        "default": "mdi:account-outline",
+        "state": {
+          "on": "mdi:account"
+        }
+      },
+      "vehicle": {
+        "default": "mdi:car-outline",
+        "state": {
+          "on": "mdi:car"
+        }
+      },
+      "pet": {
+        "default": "mdi:paw-outline",
+        "state": {
+          "on": "mdi:paw"
+        }
+      },
+      "line_crossing": {
+        "default": "mdi:vector-line"
+      },
+      "baby_cry": {
+        "default": "mdi:baby-face-outline",
+        "state": {
+          "on": "mdi:baby-face"
+        }
+      },
+      "bark": {
+        "default": "mdi:dog"
+      },
+      "meow": {
+        "default": "mdi:cat"
+      },
+      "glass_break": {
+        "default": "mdi:glass-fragile"
+      },
+      "package": {
+        "default": "mdi:package-variant-closed"
+      },
+      "area_intrusion": {
+        "default": "mdi:shield-alert-outline"
+      }
+    },
+    "button": {
+      "move_up": {
+        "default": "mdi:arrow-up-bold"
+      },
+      "move_down": {
+        "default": "mdi:arrow-down-bold"
+      },
+      "move_left": {
+        "default": "mdi:arrow-left-bold"
+      },
+      "move_right": {
+        "default": "mdi:arrow-right-bold"
+      },
+      "calibrate": {
+        "default": "mdi:axis-arrow"
+      },
+      "format_sd_card": {
+        "default": "mdi:sd"
+      }
+    },
+    "light": {
+      "spotlight": {
+        "default": "mdi:spotlight-beam"
+      },
+      "floodlight": {
+        "default": "mdi:light-flood-down"
+      }
+    },
+    "number": {
+      "speaker_volume": {
+        "default": "mdi:volume-high"
+      },
+      "microphone_volume": {
+        "default": "mdi:microphone"
+      },
+      "motion_sensitivity": {
+        "default": "mdi:motion-sensor"
+      },
+      "spotlight_intensity": {
+        "default": "mdi:brightness-6"
+      },
+      "move_angle": {
+        "default": "mdi:angle-acute"
+      }
+    },
+    "select": {
+      "motion_detection": {
+        "default": "mdi:motion-sensor"
+      },
+      "person_detection": {
+        "default": "mdi:account-search"
+      },
+      "vehicle_detection": {
+        "default": "mdi:car-search"
+      },
+      "pet_detection": {
+        "default": "mdi:paw"
+      },
+      "package_detection": {
+        "default": "mdi:package-variant"
+      },
+      "baby_cry_detection": {
+        "default": "mdi:baby-face-outline"
+      },
+      "bark_detection": {
+        "default": "mdi:dog"
+      },
+      "meow_detection": {
+        "default": "mdi:cat"
+      },
+      "glass_break_detection": {
+        "default": "mdi:glass-fragile"
+      },
+      "tamper_detection": {
+        "default": "mdi:shield-alert-outline"
+      },
+      "night_vision": {
+        "default": "mdi:weather-night"
+      },
+      "day_night_mode": {
+        "default": "mdi:theme-light-dark"
+      },
+      "light_frequency": {
+        "default": "mdi:sine-wave"
+      },
+      "preset": {
+        "default": "mdi:camera-marker-outline"
+      },
+      "stream_quality": {
+        "default": "mdi:high-definition"
+      }
+    },
+    "sensor": {
+      "ssid": {
+        "default": "mdi:wifi"
+      },
+      "link_type": {
+        "default": "mdi:lan-connect"
+      },
+      "ip_address": {
+        "default": "mdi:ip-network"
+      },
+      "sd_card_status": {
+        "default": "mdi:sd"
+      },
+      "sd_card_free_space": {
+        "default": "mdi:sd"
+      },
+      "sd_card_total_space": {
+        "default": "mdi:sd"
+      }
+    },
+    "siren": {
+      "siren": {
+        "default": "mdi:alarm-light-outline",
+        "state": {
+          "on": "mdi:alarm-light"
+        }
+      }
+    },
+    "switch": {
+      "privacy_mode": {
+        "default": "mdi:eye",
+        "state": {
+          "on": "mdi:eye-off"
+        }
+      },
+      "indicator_led": {
+        "default": "mdi:led-off",
+        "state": {
+          "on": "mdi:led-on"
+        }
+      },
+      "notifications": {
+        "default": "mdi:bell-off-outline",
+        "state": {
+          "on": "mdi:bell-outline"
+        }
+      },
+      "rich_notifications": {
+        "default": "mdi:bell-badge-outline"
+      },
+      "record_audio": {
+        "default": "mdi:microphone-off",
+        "state": {
+          "on": "mdi:microphone"
+        }
+      },
+      "microphone_mute": {
+        "default": "mdi:microphone",
+        "state": {
+          "on": "mdi:microphone-off"
+        }
+      },
+      "noise_cancelling": {
+        "default": "mdi:waveform"
+      },
+      "lens_distortion_correction": {
+        "default": "mdi:panorama-variant-outline"
+      },
+      "flip": {
+        "default": "mdi:flip-vertical"
+      },
+      "auto_track": {
+        "default": "mdi:radar"
+      },
+      "privacy_zones": {
+        "default": "mdi:select-off"
+      },
+      "record_to_sd_card": {
+        "default": "mdi:record-rec"
+      },
+      "circular_recording": {
+        "default": "mdi:repeat"
+      },
+      "line_crossing_detection": {
+        "default": "mdi:vector-line"
+      },
+      "automatic_reboot": {
+        "default": "mdi:restart"
+      },
+      "automatic_firmware_upgrade": {
+        "default": "mdi:update"
+      },
+      "diagnose_mode": {
+        "default": "mdi:bug-outline"
+      },
+      "smart_track": {
+        "default": "mdi:target-account"
+      },
+      "alarm_trigger": {
+        "default": "mdi:alarm-light-outline"
+      }
+    }
+  },
+  "services": {
+    "ptz": {
+      "service": "mdi:arrow-all"
+    },
+    "go_to_preset": {
+      "service": "mdi:camera-marker"
+    },
+    "save_preset": {
+      "service": "mdi:content-save-outline"
+    },
+    "delete_preset": {
+      "service": "mdi:delete-outline"
+    }
+  }
+}

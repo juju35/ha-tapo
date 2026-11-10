@@ -1,0 +1,451 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Kamera Tapo",
+        "description": "V aplikaciji Tapo vklopite Združljivost z aplikacijami tretjih oseb (pod Jaz), nato v naprednih nastavitvah kamere ustvarite račun kamere.",
+        "data": {
+          "host": "Gostitelj",
+          "cloud_password": "Geslo računa Tapo",
+          "username": "Uporabniško ime računa kamere",
+          "password": "Geslo računa kamere",
+          "control_port": "Krmilna vrata"
+        },
+        "data_description": {
+          "host": "Naslov IP kamere. V usmerjevalniku ji dodelite stalni naslov.",
+          "cloud_password": "Geslo računa TP-Link, v katerega je dodana kamera, uporabljeno za njene nastavitve.",
+          "username": "Račun kamere, uporabljen za video tokove in dogodke zaznavanja.",
+          "password": "Geslo računa kamere.",
+          "control_port": "443 za kamere in zvonce."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Ponovna prijava",
+        "description": "Kamera {host} je zavrnila poverilnice.",
+        "data": {
+          "cloud_password": "Geslo računa Tapo",
+          "username": "Uporabniško ime računa kamere",
+          "password": "Geslo računa kamere"
+        }
+      },
+      "reconfigure": {
+        "title": "Kamera Tapo",
+        "data": {
+          "host": "Gostitelj",
+          "cloud_password": "Geslo računa Tapo",
+          "username": "Uporabniško ime računa kamere",
+          "password": "Geslo računa kamere",
+          "control_port": "Krmilna vrata"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Napačno geslo. Uporabite geslo računa Tapo in preverite, ali je Združljivost z aplikacijami tretjih oseb vklopljena.",
+      "suspended": "Kamera po preveč neuspelih poskusih za nekaj časa blokira prijave. Poskusite znova čez nekaj minut.",
+      "cannot_connect": "Kamera se ni odzvala. Preverite njen naslov in ali so vrata 443, 554 in 2020 dosegljiva."
+    },
+    "abort": {
+      "already_configured": "Ta kamera je že nastavljena.",
+      "reauth_successful": "Ponovno prijavljeno.",
+      "reconfigure_successful": "Kamera posodobljena.",
+      "wrong_camera": "Ta naslov pripada drugi kameri."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Možnosti kamere Tapo",
+        "data": {
+          "scan_interval": "Interval osveževanja (s)",
+          "onvif_events": "Dogodki zaznavanja",
+          "motion_timeout": "Varnostna časovna omejitev zaznav (s)",
+          "rtsp_transport": "Prenos RTSP",
+          "extra_ffmpeg_arguments": "Dodatni argumenti FFmpeg za posnetke"
+        },
+        "data_description": {
+          "scan_interval": "Kako pogosto se berejo nastavitve. Zaznave pošilja kamera ne glede na ta interval.",
+          "onvif_events": "Senzorji gibanja, osebe, vozila… iz dogodkov ONVIF kamere (vrata 2020).",
+          "motion_timeout": "Zaznava brez novic tako dolgo se izklopi. 0, da ostane aktivna, dokler je kamera ne konča.",
+          "rtsp_transport": "TCP je najbolj zanesljiv.",
+          "extra_ffmpeg_arguments": "Dodani ukazu FFmpeg, ki zajema posnetke."
+        }
+      }
+    }
+  },
+  "selector": {
+    "rtsp_transport": {
+      "options": {
+        "tcp": "TCP",
+        "udp": "UDP",
+        "udp_multicast": "UDP multicast",
+        "http": "HTTP"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "event_subscription": {
+        "name": "Dogodki zaznavanja"
+      },
+      "motion": {
+        "name": "Gibanje"
+      },
+      "person": {
+        "name": "Oseba"
+      },
+      "vehicle": {
+        "name": "Vozilo"
+      },
+      "pet": {
+        "name": "Hišni ljubljenček"
+      },
+      "line_crossing": {
+        "name": "Prečkanje črte"
+      },
+      "tamper": {
+        "name": "Sabotaža"
+      },
+      "baby_cry": {
+        "name": "Jok dojenčka"
+      },
+      "bark": {
+        "name": "Lajanje"
+      },
+      "meow": {
+        "name": "Mijavkanje"
+      },
+      "glass_break": {
+        "name": "Razbitje stekla"
+      },
+      "package": {
+        "name": "Paket"
+      },
+      "area_intrusion": {
+        "name": "Vdor v območje"
+      },
+      "detection": {
+        "name": "Zaznava {type}"
+      }
+    },
+    "button": {
+      "move_up": {
+        "name": "Premakni gor"
+      },
+      "move_down": {
+        "name": "Premakni dol"
+      },
+      "move_left": {
+        "name": "Premakni levo"
+      },
+      "move_right": {
+        "name": "Premakni desno"
+      },
+      "calibrate": {
+        "name": "Umeri"
+      },
+      "format_sd_card": {
+        "name": "Formatiraj kartico SD"
+      }
+    },
+    "light": {
+      "spotlight": {
+        "name": "Reflektor"
+      },
+      "floodlight": {
+        "name": "Žaromet"
+      }
+    },
+    "number": {
+      "speaker_volume": {
+        "name": "Glasnost zvočnika"
+      },
+      "microphone_volume": {
+        "name": "Glasnost mikrofona"
+      },
+      "motion_sensitivity": {
+        "name": "Občutljivost gibanja"
+      },
+      "spotlight_intensity": {
+        "name": "Jakost reflektorja"
+      },
+      "move_angle": {
+        "name": "Korak premika"
+      }
+    },
+    "select": {
+      "motion_detection": {
+        "name": "Zaznavanje gibanja",
+        "state": {
+          "off": "Izklopljeno",
+          "low": "Nizka",
+          "normal": "Običajna",
+          "high": "Visoka"
+        }
+      },
+      "person_detection": {
+        "name": "Zaznavanje oseb",
+        "state": {
+          "off": "Izklopljeno",
+          "low": "Nizka",
+          "normal": "Običajna",
+          "high": "Visoka"
+        }
+      },
+      "vehicle_detection": {
+        "name": "Zaznavanje vozil",
+        "state": {
+          "off": "Izklopljeno",
+          "low": "Nizka",
+          "normal": "Običajna",
+          "high": "Visoka"
+        }
+      },
+      "pet_detection": {
+        "name": "Zaznavanje hišnih ljubljenčkov",
+        "state": {
+          "off": "Izklopljeno",
+          "low": "Nizka",
+          "normal": "Običajna",
+          "high": "Visoka"
+        }
+      },
+      "package_detection": {
+        "name": "Zaznavanje paketov",
+        "state": {
+          "off": "Izklopljeno",
+          "low": "Nizka",
+          "normal": "Običajna",
+          "high": "Visoka"
+        }
+      },
+      "baby_cry_detection": {
+        "name": "Zaznavanje joka dojenčka",
+        "state": {
+          "off": "Izklopljeno",
+          "low": "Nizka",
+          "normal": "Običajna",
+          "high": "Visoka"
+        }
+      },
+      "bark_detection": {
+        "name": "Zaznavanje lajanja",
+        "state": {
+          "off": "Izklopljeno",
+          "low": "Nizka",
+          "normal": "Običajna",
+          "high": "Visoka"
+        }
+      },
+      "meow_detection": {
+        "name": "Zaznavanje mijavkanja",
+        "state": {
+          "off": "Izklopljeno",
+          "low": "Nizka",
+          "normal": "Običajna",
+          "high": "Visoka"
+        }
+      },
+      "glass_break_detection": {
+        "name": "Zaznavanje razbitja stekla",
+        "state": {
+          "off": "Izklopljeno",
+          "low": "Nizka",
+          "normal": "Običajna",
+          "high": "Visoka"
+        }
+      },
+      "tamper_detection": {
+        "name": "Zaznavanje sabotaže",
+        "state": {
+          "off": "Izklopljeno",
+          "low": "Nizka",
+          "normal": "Običajna",
+          "high": "Visoka"
+        }
+      },
+      "night_vision": {
+        "name": "Nočni vid",
+        "state": {
+          "inf_night_vision": "Infrardeče",
+          "wtl_night_vision": "Polne barve",
+          "md_night_vision": "Pametno",
+          "dbl_night_vision": "Dvojna luč"
+        }
+      },
+      "day_night_mode": {
+        "name": "Način dan/noč",
+        "state": {
+          "auto": "Samodejno",
+          "on": "Noč",
+          "off": "Dan"
+        }
+      },
+      "light_frequency": {
+        "name": "Frekvenca svetlobe",
+        "state": {
+          "auto": "Samodejno",
+          "50": "50 Hz",
+          "60": "60 Hz"
+        }
+      },
+      "preset": {
+        "name": "Prednastavitev"
+      },
+      "stream_quality": {
+        "name": "Kakovost toka",
+        "state": {
+          "hd": "HD",
+          "sd": "SD"
+        }
+      }
+    },
+    "sensor": {
+      "ssid": {
+        "name": "Omrežje Wi-Fi"
+      },
+      "link_type": {
+        "name": "Vrsta povezave"
+      },
+      "ip_address": {
+        "name": "Naslov IP"
+      },
+      "sd_card_status": {
+        "name": "Stanje kartice SD"
+      },
+      "sd_card_free_space": {
+        "name": "Prosti prostor na kartici SD"
+      },
+      "sd_card_total_space": {
+        "name": "Velikost kartice SD"
+      }
+    },
+    "siren": {
+      "siren": {
+        "name": "Alarm"
+      }
+    },
+    "switch": {
+      "privacy_mode": {
+        "name": "Način zasebnosti"
+      },
+      "indicator_led": {
+        "name": "Statusna LED"
+      },
+      "notifications": {
+        "name": "Obvestila"
+      },
+      "rich_notifications": {
+        "name": "Razširjena obvestila"
+      },
+      "record_audio": {
+        "name": "Snemaj zvok"
+      },
+      "microphone_mute": {
+        "name": "Utišan mikrofon"
+      },
+      "noise_cancelling": {
+        "name": "Odpravljanje šuma"
+      },
+      "lens_distortion_correction": {
+        "name": "Popravek popačenja objektiva"
+      },
+      "flip": {
+        "name": "Obrni sliko"
+      },
+      "auto_track": {
+        "name": "Samodejno sledenje"
+      },
+      "privacy_zones": {
+        "name": "Območja zasebnosti"
+      },
+      "record_to_sd_card": {
+        "name": "Snemaj na kartico SD"
+      },
+      "circular_recording": {
+        "name": "Snemanje v zanki"
+      },
+      "line_crossing_detection": {
+        "name": "Zaznavanje prečkanja črte"
+      },
+      "automatic_reboot": {
+        "name": "Načrtovan ponovni zagon"
+      },
+      "automatic_firmware_upgrade": {
+        "name": "Samodejna posodobitev vdelane programske opreme"
+      },
+      "diagnose_mode": {
+        "name": "Diagnostični način"
+      },
+      "smart_track": {
+        "name": "Pametno sledenje {type}"
+      },
+      "alarm_trigger": {
+        "name": "Alarm ob {type}"
+      }
+    }
+  },
+  "exceptions": {
+    "invalid_auth": {
+      "message": "Kamera {host} je zavrnila poverilnice."
+    },
+    "suspended": {
+      "message": "Kamera {host} po preveč neuspelih poskusih za {seconds} s blokira prijave."
+    },
+    "cannot_connect": {
+      "message": "Kamera {host} se ni odzvala: {error}"
+    },
+    "privacy_mode": {
+      "message": "Ni mogoče, dokler je način zasebnosti vklopljen."
+    },
+    "command_failed": {
+      "message": "Kamera {host} je zavrnila spremembo: {error}"
+    }
+  },
+  "services": {
+    "ptz": {
+      "name": "Obračanje in nagib",
+      "description": "Zavrti kamero za podane kote od njenega trenutnega položaja.",
+      "fields": {
+        "pan": {
+          "name": "Obračanje",
+          "description": "Stopinje v desno (negativno: v levo)."
+        },
+        "tilt": {
+          "name": "Nagib",
+          "description": "Stopinje navzgor (negativno: navzdol)."
+        }
+      }
+    },
+    "go_to_preset": {
+      "name": "Pojdi na prednastavitev",
+      "description": "Premakne kamero v shranjen položaj.",
+      "fields": {
+        "preset": {
+          "name": "Prednastavitev",
+          "description": "Ime ali ID prednastavitve."
+        }
+      }
+    },
+    "save_preset": {
+      "name": "Shrani prednastavitev",
+      "description": "Shrani trenutni položaj kamere.",
+      "fields": {
+        "name": {
+          "name": "Ime",
+          "description": "Ime nove prednastavitve."
+        }
+      }
+    },
+    "delete_preset": {
+      "name": "Izbriši prednastavitev",
+      "description": "Izbriše shranjen položaj.",
+      "fields": {
+        "preset": {
+          "name": "Prednastavitev",
+          "description": "Ime ali ID prednastavitve."
+        }
+      }
+    }
+  }
+}

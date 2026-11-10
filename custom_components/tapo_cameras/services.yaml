@@ -1,0 +1,55 @@
+ptz:
+  target:
+    entity:
+      integration: tapo_cameras
+      domain: camera
+  fields:
+    pan:
+      default: 0
+      selector:
+        number:
+          min: -360
+          max: 360
+          step: 1
+          unit_of_measurement: "°"
+    tilt:
+      default: 0
+      selector:
+        number:
+          min: -360
+          max: 360
+          step: 1
+          unit_of_measurement: "°"
+go_to_preset:
+  target:
+    entity:
+      integration: tapo_cameras
+      domain: camera
+  fields:
+    preset:
+      required: true
+      example: "Door"
+      selector:
+        text:
+save_preset:
+  target:
+    entity:
+      integration: tapo_cameras
+      domain: camera
+  fields:
+    name:
+      required: true
+      example: "Door"
+      selector:
+        text:
+delete_preset:
+  target:
+    entity:
+      integration: tapo_cameras
+      domain: camera
+  fields:
+    preset:
+      required: true
+      example: "Door"
+      selector:
+        text:

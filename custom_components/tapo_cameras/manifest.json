@@ -1,0 +1,19 @@
+{
+  "domain": "tapo_cameras",
+  "name": "Tapo Cameras",
+  "codeowners": ["@juju35"],
+  "config_flow": true,
+  "dependencies": ["ffmpeg"],
+  "dhcp": [
+    { "hostname": "c[0-9][0-9][0-9]*_*" },
+    { "hostname": "tc[0-9][0-9]*_*" },
+    { "hostname": "d[0-9][0-9][0-9]*_*" }
+  ],
+  "documentation": "https://github.com/juju35/ha-tapo",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/juju35/ha-tapo/issues",
+  "loggers": ["pytapo", "onvif"],
+  "requirements": ["pytapo==3.4.30", "onvif-zeep-async>=3.1.12"],
+  "version": "1.0.0"
+}

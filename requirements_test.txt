@@ -1,0 +1,5 @@
+pytest-homeassistant-custom-component
+pytapo==3.4.30
+onvif-zeep-async
+PyTurboJPEG
+ha-ffmpeg
