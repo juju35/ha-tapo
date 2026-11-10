@@ -62,8 +62,9 @@ def test_all_languages_are_tested():
 
 @pytest.mark.parametrize("language", LANGUAGES)
 def test_translation_parity(language: str):
-    """Same keys as en.json, same placeholders in each string, nothing empty."""
+    """Same keys as en.json (but entity names), same placeholders in each string, nothing empty."""
     english, other = _load("en"), _load(language)
+    english = {key: text for key, text in english.items() if not key.startswith("entity.")}
     assert sorted(other) == sorted(english)
     for key, text in english.items():
         assert other[key].strip(), key
@@ -82,6 +83,13 @@ def test_serbian_script(language: str, forbidden: str):
     """No Latin letter in sr (but brands and placeholders), no Cyrillic letter in sr-Latn."""
     for key, text in _load(language).items():
         assert not re.search(forbidden, _SR_LATIN_ALLOWED.sub("", text)), key
+
+
+@pytest.mark.parametrize("language", LANGUAGES)
+def test_entity_names_not_translated(language: str):
+    """Entity names (and their states) stay in English in every language: same names, same entity IDs."""
+    data = json.loads((TRANSLATIONS / f"{language}.json").read_text(encoding="utf-8"))
+    assert "entity" not in data
 
 
 def test_every_translation_key_is_used() -> None:

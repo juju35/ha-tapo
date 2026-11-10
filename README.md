@@ -163,7 +163,7 @@ pre-commit run --all-files
 
 ## Translations
 
-The integration follows the language of Home Assistant. Currently supported:
+The configuration, options, actions and error messages follow the language of Home Assistant. Entity names (and select states) stay in English in every language, so that names and entity IDs are the same everywhere. Currently supported:
 
 | Language | Code |
 |---|---|

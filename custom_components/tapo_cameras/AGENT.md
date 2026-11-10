@@ -25,7 +25,7 @@ custom_components/tapo_cameras/
 - Never call pytapo from the event loop: it is synchronous, and with `hass` given it schedules its own coroutines on the loop and waits for them.
 - A new getMost request read by an entity must not be in UNUSED_METHODS; put it in SLOW_METHODS if it rarely changes.
 - Every request goes through `TapoClient.async_call` (the lock). Actions that must not run twice if their answer is lost (moves, presets, reboot, alarm, firmware) use `retry=False`.
-- A new setting = a description: `method` from the getMost list (pytapo `getMost`), `path` into its answer, setter calling the pytapo setter, `to_raw` for the optimistic write. Add its translation key to en.json and every language (tests/test_translations.py checks keys are used and equal everywhere).
+- A new setting = a description: `method` from the getMost list (pytapo `getMost`), `path` into its answer, setter calling the pytapo setter, `to_raw` for the optimistic write. Add its translation key to en.json only: entity names and states are not translated (English everywhere, the other files have no "entity" section; tests/test_translations.py checks it and that the other keys are equal everywhere).
 - Control login: user `admin` + Tapo account password (cloud password) for both password arguments; RTSP/ONVIF: the camera account.
 
 ## Release

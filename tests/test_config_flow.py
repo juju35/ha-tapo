@@ -91,6 +91,8 @@ async def test_reauth(hass: HomeAssistant, loaded: MockConfigEntry, camera: Fake
     result = await hass.config_entries.flow.async_configure(result["flow_id"], new)
     assert result["type"] is FlowResultType.ABORT
     assert result["reason"] == "reauth_successful"
+    # The entry reloads with the new password: let it finish before checking and tearing down.
+    await hass.async_block_till_done()
     assert loaded.data[CONF_CLOUD_PASSWORD] == "new-cloud"
 
 
