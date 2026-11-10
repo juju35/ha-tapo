@@ -85,6 +85,8 @@ class TapoClient:
         self._lock = asyncio.Lock()
         self._failures = 0
         self._next_attempt = 0.0
+        # Successful logins so far: a new one may follow a reboot or a firmware update.
+        self.logins = 0
 
     @property
     def connected(self) -> bool:
@@ -127,6 +129,7 @@ class TapoClient:
             raise error from err
         self._failures = 0
         self._next_attempt = 0.0
+        self.logins += 1
         _LOGGER.debug("Connected to %s (KLAP: %s)", self.host, tapo.isKLAP)
         return tapo
 
@@ -153,7 +156,9 @@ class TapoClient:
                     # The camera answered: the session is fine.
                     raise error from err
                 await self._async_drop()
-                if not reconnect or isinstance(error, (TapoAuthError, TapoSuspendedError)):
+                # After a timeout the request may still be running in its thread: no second one now.
+                timed_out = isinstance(err, TimeoutError)
+                if not reconnect or timed_out or isinstance(error, (TapoAuthError, TapoSuspendedError)):
                     raise error from err
                 _LOGGER.debug("Request to %s failed (%s), logging in again", self.host, err)
             # Once more with a new session: a session dropped by the camera is the usual cause.
@@ -166,16 +171,17 @@ class TapoClient:
                     await self._async_drop()
                 raise error from err
 
-    async def async_get_state(self) -> dict[str, list[Any]]:
-        """Every setting of the camera in one request."""
+    async def async_get_state(self, omit: frozenset[str] = frozenset()) -> dict[str, list[Any]]:
+        """The camera's settings in one request, without the `omit` requests (answered False)."""
+        omit_methods = sorted(omit)
 
         def get_most(tapo: Tapo) -> dict[str, list[Any]]:
             try:
-                return tapo.getMost()
+                return tapo.getMost(omit_methods=omit_methods)
             except Exception:
                 # Some firmwares answer the batch with invalid JSON because of one method.
                 _LOGGER.debug("Batched request to %s failed, retrying without %s", self.host, _FRAGILE_METHODS)
-                return tapo.getMost(omit_methods=_FRAGILE_METHODS)
+                return tapo.getMost(omit_methods=sorted({*omit_methods, *_FRAGILE_METHODS}))
 
         return await self.async_call(get_most)
 

@@ -82,10 +82,12 @@ def subscription():
 @pytest.fixture
 async def with_events(hass: HomeAssistant, camera: FakeCamera, entry: MockConfigEntry, subscription) -> MockConfigEntry:
     hass.config_entries.async_update_entry(entry, options={CONF_ONVIF_EVENTS: True, CONF_MOTION_TIMEOUT: 60})
-    assert await hass.config_entries.async_setup(entry.entry_id)
-    await hass.async_block_till_done()
-    yield entry
-    await hass.config_entries.async_unload(entry.entry_id)
+    # Time jumps in these tests must not look like a dead connection (tested on its own below).
+    with patch("custom_components.tapo_cameras.events.ONVIF_PULL_GRACE", 3600):
+        assert await hass.config_entries.async_setup(entry.entry_id)
+        await hass.async_block_till_done()
+        yield entry
+        await hass.config_entries.async_unload(entry.entry_id)
 
 
 def _state(hass: HomeAssistant, key: str):
@@ -144,3 +146,39 @@ async def test_subscription_loss_and_recovery(hass: HomeAssistant, with_events: 
     assert _state(hass, "event_subscription").state == "on"
     assert _state(hass, "motion").state == "off"
     subscription.manager.shutdown.assert_awaited()
+
+
+async def test_dead_connection_detected(hass: HomeAssistant, with_events: MockConfigEntry, subscription) -> None:
+    """A pull that never answers (connection dead without a reset) ends in a new subscription."""
+    events = with_events.runtime_data.events
+    events.async_stop()
+    with (
+        patch("custom_components.tapo_cameras.events.ONVIF_PULL_TIMEOUT", timedelta(seconds=0.01)),
+        patch("custom_components.tapo_cameras.events.ONVIF_PULL_GRACE", 0.01),
+        patch.object(OnvifEvents, "_backoff", AsyncMock(side_effect=asyncio.CancelledError)) as backoff,
+    ):
+        events.async_start()
+        with pytest.raises(asyncio.CancelledError):
+            await events._task
+    backoff.assert_awaited_once_with(5)
+    assert not events.connected
+
+
+async def test_empty_answers_do_not_spin(hass: HomeAssistant, with_events: MockConfigEntry, subscription) -> None:
+    """A firmware answering at once with nothing is pulled at most once a second."""
+    waits = []
+
+    async def wait(delay):
+        waits.append(delay)
+        if len(waits) == 3:
+            raise asyncio.CancelledError
+
+    events = with_events.runtime_data.events
+    events.async_stop()
+    for _ in range(5):
+        await subscription.batches.put([])
+    with patch.object(OnvifEvents, "_backoff", side_effect=wait):
+        events.async_start()
+        with pytest.raises(asyncio.CancelledError):
+            await events._task
+    assert waits == [1.0, 1.0, 1.0]

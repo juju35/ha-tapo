@@ -5,6 +5,8 @@ On/off is the privacy mode.
 
 from __future__ import annotations
 
+import asyncio
+from time import monotonic
 from typing import Any
 from urllib.parse import quote
 
@@ -25,6 +27,7 @@ from .const import (
     CONF_RTSP_TRANSPORT,
     DEFAULT_RTSP_PORT,
     DEFAULT_RTSP_TRANSPORT,
+    SNAPSHOT_CACHE,
     STREAM_PATHS,
 )
 from .coordinator import TapoCoordinator
@@ -58,6 +61,8 @@ class TapoCamera(TapoEntity, Camera):
         password = quote(entry.data[CONF_PASSWORD], safe="")
         self._base_url = f"rtsp://{user}:{password}@{entry.data[CONF_HOST]}:{DEFAULT_RTSP_PORT}/"
         self._quality = coordinator.stream_quality
+        self._snapshot_lock = asyncio.Lock()
+        self._snapshot: tuple[tuple[str, int | None, int | None], float, bytes] | None = None
         self._extra_arguments: str = entry.options.get(CONF_EXTRA_FFMPEG_ARGS, "")
         self.stream_options[CONF_RTSP_TRANSPORT] = entry.options.get(CONF_RTSP_TRANSPORT, DEFAULT_RTSP_TRANSPORT)
 
@@ -94,11 +99,24 @@ class TapoCamera(TapoEntity, Camera):
         return self._url if self.is_on else None
 
     async def async_camera_image(self, width: int | None = None, height: int | None = None) -> bytes | None:
+        """A still from ffmpeg, when no stream is running (otherwise Home Assistant takes it from the stream).
+
+        Dashboards ask every few seconds, often several at once: one ffmpeg at a time, and a still
+        taken less than SNAPSHOT_CACHE ago is served again, so that stills don't use up the camera's
+        two RTSP sessions.
+        """
         if not self.is_on:
             return None
-        return await async_get_image(
-            self.hass, self._url, extra_cmd=self._extra_arguments or None, width=width, height=height
-        )
+        key = (self._url, width, height)
+        async with self._snapshot_lock:
+            cached = self._snapshot
+            if cached is not None and cached[0] == key and monotonic() - cached[1] < SNAPSHOT_CACHE:
+                return cached[2]
+            image = await async_get_image(
+                self.hass, self._url, extra_cmd=self._extra_arguments or None, width=width, height=height
+            )
+            self._snapshot = (key, monotonic(), image) if image else None
+            return image
 
     async def _async_set_privacy(self, enabled: bool) -> None:
         await self.coordinator.async_command(

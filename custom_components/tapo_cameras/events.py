@@ -13,6 +13,7 @@ import asyncio
 import contextlib
 import logging
 import re
+import time
 from collections.abc import Callable
 from datetime import datetime
 from typing import Any
@@ -25,6 +26,8 @@ from .const import (
     DOMAIN,
     EVENT_TAPO,
     ONVIF_MESSAGE_LIMIT,
+    ONVIF_MIN_PULL_INTERVAL,
+    ONVIF_PULL_GRACE,
     ONVIF_PULL_TIMEOUT,
     ONVIF_RETRY_BACKOFF,
     ONVIF_SUBSCRIPTION_TTL,
@@ -162,6 +165,7 @@ class OnvifEvents:
         failures = 0
         while True:
             camera = manager = None
+            started = time.monotonic()
             try:
                 camera, manager = await self._subscribe()
                 service = manager.get_service()
@@ -183,6 +187,9 @@ class OnvifEvents:
                 continue
             await self._close(camera, manager)
             self._set_connected(False, "subscription lost")
+            # A subscription the camera drops right away: don't subscribe again in a tight loop.
+            if time.monotonic() - started < ONVIF_SUBSCRIPTION_TTL.total_seconds():
+                await self._backoff(ONVIF_RETRY_BACKOFF[0])
 
     @staticmethod
     async def _backoff(delay: float) -> None:
@@ -204,12 +211,19 @@ class OnvifEvents:
 
     async def _pull(self, service: Any) -> None:
         params = {"MessageLimit": ONVIF_MESSAGE_LIMIT, "Timeout": ONVIF_PULL_TIMEOUT}
+        # The camera answers within ONVIF_PULL_TIMEOUT; no answer at all means a dead connection.
+        deadline = ONVIF_PULL_TIMEOUT.total_seconds() + ONVIF_PULL_GRACE
         while not self._lost.is_set():
-            response = await service.PullMessages(params)
-            for message in getattr(response, "NotificationMessage", None) or []:
+            started = time.monotonic()
+            response = await asyncio.wait_for(service.PullMessages(params), deadline)
+            messages = getattr(response, "NotificationMessage", None) or []
+            for message in messages:
                 self.messages += 1
                 for key, active in parse_message(message):
                     self._update(key, active)
+            # Some firmwares ignore the timeout and answer at once with nothing: don't spin.
+            if not messages and time.monotonic() - started < ONVIF_MIN_PULL_INTERVAL:
+                await self._backoff(ONVIF_MIN_PULL_INTERVAL)
 
     @staticmethod
     async def _close(camera: Any, manager: Any) -> None:

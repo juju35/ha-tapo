@@ -87,8 +87,17 @@ class FakeCamera:
         self.tapo.isKLAP = False
         self.tapo.deviceType = "SMART.IPCAMERA"
         self.tapo.basicInfo = self.state["getDeviceInfo"][0]
-        self.tapo.getMost.side_effect = lambda *a, **k: copy.deepcopy(self.state)
+        self.tapo.getMost.side_effect = self.get_most
+        self.asked: list[set[str]] = []
         self.constructor = MagicMock(name="Tapo()", return_value=self.tapo)
+
+    def get_most(self, omit_methods=(), **kwargs) -> dict[str, list[Any]]:
+        """Like the library: omitted requests are answered False."""
+        answer = copy.deepcopy(self.state)
+        for method in omit_methods:
+            answer[method] = [False]
+        self.asked.append(set(self.state) - set(omit_methods))
+        return answer
 
 
 @pytest.fixture

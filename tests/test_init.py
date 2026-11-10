@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import asyncio
+import time
 from datetime import timedelta
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from homeassistant.components.camera import async_get_stream_source
@@ -187,3 +189,25 @@ async def test_firmware_check(hass: HomeAssistant, loaded: MockConfigEntry, came
     assert state.attributes["latest_version"] == "1.2.0 Build 251001"
     await hass.services.async_call("update", "install", {"entity_id": entity_id}, blocking=True)
     camera.tapo.startFirmwareUpgrade.assert_called_once()
+
+
+async def test_snapshots_shared(hass: HomeAssistant, loaded: MockConfigEntry) -> None:
+    """Several dashboards asking at once: one ffmpeg, the still served again for a few seconds."""
+    from homeassistant.components.camera import async_get_image
+
+    calls = 0
+
+    async def slow_image(*args, **kwargs):
+        nonlocal calls
+        calls += 1
+        await asyncio.sleep(0.01)
+        return b"jpeg"
+
+    entity_id = _entity_id(hass, "camera", "camera")
+    with patch("custom_components.tapo_cameras.camera.async_get_image", slow_image):
+        images = await asyncio.gather(*(async_get_image(hass, entity_id) for _ in range(5)))
+        assert all(image.content == b"jpeg" for image in images)
+        assert calls == 1
+        with patch("custom_components.tapo_cameras.camera.monotonic", return_value=time.monotonic() + 6):
+            await async_get_image(hass, entity_id)
+        assert calls == 2

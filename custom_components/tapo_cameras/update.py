@@ -81,8 +81,11 @@ class TapoFirmwareUpdate(TapoEntity, UpdateEntity):
         return notes.replace("\\n", "\n") if isinstance(notes, str) else None
 
     async def async_update(self) -> None:
+        # Not while the camera is unreachable: the check would only wait for its timeouts.
+        if not self.coordinator.last_update_success:
+            return
         try:
-            answer = await self.coordinator.client.async_call(lambda tapo: tapo.isUpdateAvailable())
+            answer = await self.coordinator.client.async_call(lambda tapo: tapo.isUpdateAvailable(), reconnect=False)
         except TapoError:
             # The camera or the cloud is unreachable: keep what was known.
             return
