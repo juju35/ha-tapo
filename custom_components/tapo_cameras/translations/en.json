@@ -59,6 +59,7 @@
         "data": {
           "scan_interval": "Refresh interval (s)",
           "onvif_events": "Detection events",
+          "detection_hold": "Detection hold time (s)",
           "motion_timeout": "Detection safety timeout (s)",
           "rtsp_transport": "RTSP transport",
           "extra_ffmpeg_arguments": "Extra FFmpeg arguments for snapshots"
@@ -66,6 +67,7 @@
         "data_description": {
           "scan_interval": "How often the settings are read. Detections are pushed by the camera, whatever this interval.",
           "onvif_events": "Motion, person, vehicle… sensors, from the camera's ONVIF events (port 2020).",
+          "detection_hold": "A detection stays on this long after the camera ends it, so that it doesn't switch off and on again every few seconds while something moves. 0 to follow the camera.",
           "motion_timeout": "A detection without news for this long is switched off. 0 to keep it on until the camera ends it.",
           "rtsp_transport": "TCP is the most reliable.",
           "extra_ffmpeg_arguments": "Added to the FFmpeg command that takes snapshots."

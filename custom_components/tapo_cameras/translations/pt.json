@@ -59,6 +59,7 @@
         "data": {
           "scan_interval": "Intervalo de atualização (s)",
           "onvif_events": "Eventos de deteção",
+          "detection_hold": "Tempo de retenção das deteções (s)",
           "motion_timeout": "Tempo limite de segurança das deteções (s)",
           "rtsp_transport": "Transporte RTSP",
           "extra_ffmpeg_arguments": "Argumentos FFmpeg adicionais para as capturas"
@@ -66,6 +67,7 @@
         "data_description": {
           "scan_interval": "Frequência de leitura das definições. As deteções são enviadas pela câmara, independentemente deste intervalo.",
           "onvif_events": "Sensores de movimento, pessoa, veículo… a partir dos eventos ONVIF da câmara (porta 2020).",
+          "detection_hold": "Uma deteção continua ativa durante este tempo depois de a câmara a terminar, para não desligar e voltar a ligar a cada poucos segundos enquanto algo se move. 0 para seguir a câmara.",
           "motion_timeout": "Uma deteção sem novidades durante este tempo é desligada. 0 para a manter ativa até a câmara a terminar.",
           "rtsp_transport": "TCP é o mais fiável.",
           "extra_ffmpeg_arguments": "Acrescentados ao comando FFmpeg que tira as capturas."

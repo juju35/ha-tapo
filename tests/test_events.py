@@ -16,7 +16,13 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant_custom_component.common import MockConfigEntry, async_fire_time_changed
 
-from custom_components.tapo_cameras.const import CONF_MOTION_TIMEOUT, CONF_ONVIF_EVENTS, DOMAIN, EVENT_TAPO
+from custom_components.tapo_cameras.const import (
+    CONF_DETECTION_HOLD,
+    CONF_MOTION_TIMEOUT,
+    CONF_ONVIF_EVENTS,
+    DOMAIN,
+    EVENT_TAPO,
+)
 from custom_components.tapo_cameras.events import OnvifEvents, parse_message
 
 from .conftest import FakeCamera
@@ -87,7 +93,9 @@ def subscription():
 
 @pytest.fixture
 async def with_events(hass: HomeAssistant, camera: FakeCamera, entry: MockConfigEntry, subscription) -> MockConfigEntry:
-    hass.config_entries.async_update_entry(entry, options={CONF_ONVIF_EVENTS: True, CONF_MOTION_TIMEOUT: 60})
+    hass.config_entries.async_update_entry(
+        entry, options={CONF_ONVIF_EVENTS: True, CONF_MOTION_TIMEOUT: 60, CONF_DETECTION_HOLD: 0}
+    )
     # Time jumps in these tests must not look like a dead connection (tested on its own below).
     with patch("custom_components.tapo_cameras.events.ONVIF_PULL_GRACE", 3600):
         assert await hass.config_entries.async_setup(entry.entry_id)
@@ -123,6 +131,33 @@ async def test_events_drive_the_sensors(hass: HomeAssistant, with_events: MockCo
     await subscription.batches.put([message("tns1:RuleEngine/CellMotionDetector/Motion", "IsMotion", "false")])
     await hass.async_block_till_done()
     assert _state(hass, "motion").state == "off"
+
+
+async def test_detection_held_after_the_camera_ends_it(
+    hass: HomeAssistant, with_events: MockConfigEntry, subscription
+) -> None:
+    """A camera ending and starting a detection every few seconds: one detection, held after the end."""
+    events = with_events.runtime_data.events
+    events._hold = 30
+    fired = []
+    hass.bus.async_listen(EVENT_TAPO, fired.append)
+    changes = []
+    remove = events.async_add_listener(lambda: changes.append(events.states.get("motion")))
+    start = message("tns1:RuleEngine/CellMotionDetector/Motion", "IsMotion", "true")
+    end = message("tns1:RuleEngine/CellMotionDetector/Motion", "IsMotion", "false")
+    now = dt_util.utcnow()
+    for batch in ([start], [end], [start], [end]):
+        await subscription.batches.put(batch)
+        await hass.async_block_till_done()
+    async_fire_time_changed(hass, now + timedelta(seconds=20))
+    await hass.async_block_till_done()
+    assert _state(hass, "motion").state == "on"
+    async_fire_time_changed(hass, now + timedelta(seconds=31))
+    await hass.async_block_till_done()
+    remove()
+    assert _state(hass, "motion").state == "off"
+    assert changes == [True, False]
+    assert len(fired) == 1
 
 
 async def test_unknown_detection_gets_a_sensor(hass: HomeAssistant, with_events: MockConfigEntry, subscription) -> None:

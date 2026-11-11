@@ -59,6 +59,7 @@
         "data": {
           "scan_interval": "Frissítési időköz (s)",
           "onvif_events": "Észlelési események",
+          "detection_hold": "Észlelések tartási ideje (s)",
           "motion_timeout": "Észlelések biztonsági időkorlátja (s)",
           "rtsp_transport": "RTSP-átvitel",
           "extra_ffmpeg_arguments": "További FFmpeg-argumentumok a pillanatképekhez"
@@ -66,6 +67,7 @@
         "data_description": {
           "scan_interval": "Milyen gyakran olvassuk a beállításokat. Az észleléseket a kamera küldi, ettől az időköztől függetlenül.",
           "onvif_events": "Mozgás-, személy-, járműérzékelők… a kamera ONVIF-eseményeiből (2020-as port).",
+          "detection_hold": "Az észlelés ennyi ideig aktív marad, miután a kamera befejezte, hogy ne kapcsoljon ki és be néhány másodpercenként, amíg valami mozog. 0 a kamera követéséhez.",
           "motion_timeout": "Az ennyi ideje hír nélküli észlelés kikapcsol. 0: aktív marad, amíg a kamera be nem fejezi.",
           "rtsp_transport": "A TCP a legmegbízhatóbb.",
           "extra_ffmpeg_arguments": "A pillanatképeket készítő FFmpeg-parancshoz adódnak."

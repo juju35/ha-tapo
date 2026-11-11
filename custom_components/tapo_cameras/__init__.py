@@ -19,9 +19,11 @@ from .const import (
     ATTR_TILT,
     CONF_CLOUD_PASSWORD,
     CONF_CONTROL_PORT,
+    CONF_DETECTION_HOLD,
     CONF_MOTION_TIMEOUT,
     CONF_ONVIF_EVENTS,
     DEFAULT_CONTROL_PORT,
+    DEFAULT_DETECTION_HOLD,
     DEFAULT_MOTION_TIMEOUT,
     DEFAULT_ONVIF_PORT,
     DOMAIN,
@@ -92,6 +94,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: TapoConfigEntry) -> bool
             data[CONF_PASSWORD],
             options.get(CONF_MOTION_TIMEOUT, DEFAULT_MOTION_TIMEOUT),
             lambda: _device_id(hass, entry),
+            hold=options.get(CONF_DETECTION_HOLD, DEFAULT_DETECTION_HOLD),
         )
         coordinator.events.async_start()
 

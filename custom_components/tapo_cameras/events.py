@@ -3,6 +3,8 @@
 The subscription is held for the whole life of the entry: it is renewed before it expires, and
 when the camera drops it (reboot, Wi-Fi loss, firmware update) it is created again with a backoff.
 Binary sensors exist from the start and are only unavailable while no subscription is active.
+Cameras end a detection and start it again every few seconds while something moves: a state stays
+on `hold` seconds after the camera ends it, and a new start in the meantime keeps it on.
 Some firmwares never send the "end" of an event: a state still on after `motion_timeout` seconds
 without news is switched off.
 """
@@ -124,6 +126,7 @@ class OnvifEvents:
         password: str,
         motion_timeout: int,
         device_id: Callable[[], str | None],
+        hold: int = 0,
     ) -> None:
         self._hass = hass
         self.host = host
@@ -131,6 +134,7 @@ class OnvifEvents:
         self._username = username
         self._password = password
         self._motion_timeout = motion_timeout
+        self._hold = hold
         self._device_id = device_id
         self._device: str | None = None
         self.states: dict[str, bool] = {}
@@ -140,6 +144,8 @@ class OnvifEvents:
         self.messages = 0
         self._listeners: list[Callable[[], None]] = []
         self._timeouts: dict[str, CALLBACK_TYPE] = {}
+        # Detection → pending end, once the camera ended it (held `hold` seconds).
+        self._holds: dict[str, CALLBACK_TYPE] = {}
         self._task: asyncio.Task | None = None
         self._lost = asyncio.Event()
         # Seconds of a pull once shortened (the camera cuts long pulls); ONVIF_PULL_TIMEOUT until then.
@@ -172,9 +178,10 @@ class OnvifEvents:
         if self._task is not None:
             self._task.cancel()
             self._task = None
-        for cancel in self._timeouts.values():
+        for cancel in [*self._timeouts.values(), *self._holds.values()]:
             cancel()
         self._timeouts.clear()
+        self._holds.clear()
 
     # Subscription
 
@@ -281,7 +288,7 @@ class OnvifEvents:
         if not connected:
             # What was detected before the loss is not known to have ended: clear it.
             for key in [k for k, v in self.states.items() if v]:
-                self._update(key, False, notify=False)
+                self._update(key, False, notify=False, held=False)
             changed = True
         if changed:
             self._notify()
@@ -289,11 +296,18 @@ class OnvifEvents:
     # States
 
     @callback
-    def _update(self, key: str, active: bool, notify: bool = True) -> None:
+    def _update(self, key: str, active: bool, notify: bool = True, held: bool = True) -> None:
+        """A detection from the camera; `held` False ends it at once (subscription lost, timeout)."""
         if (cancel := self._timeouts.pop(key, None)) is not None:
             cancel()
+        if (cancel := self._holds.pop(key, None)) is not None:
+            cancel()
         if active and self._motion_timeout > 0:
-            self._timeouts[key] = async_call_later(self._hass, self._motion_timeout, self._timeout_callback(key))
+            self._timeouts[key] = async_call_later(self._hass, self._motion_timeout, self._end_callback(key))
+        if not active and held and self._hold > 0 and self.states.get(key):
+            # Ended by the camera: kept on a while, a new start in between continues it.
+            self._holds[key] = async_call_later(self._hass, self._hold, self._end_callback(key))
+            return
         if self.states.get(key) == active:
             return
         self.states[key] = active
@@ -305,13 +319,14 @@ class OnvifEvents:
         if notify:
             self._notify()
 
-    def _timeout_callback(self, key: str) -> Callable[[datetime], None]:
+    def _end_callback(self, key: str) -> Callable[[datetime], None]:
         @callback
-        def expire(_now: datetime) -> None:
+        def end(_now: datetime) -> None:
             self._timeouts.pop(key, None)
-            self._update(key, False)
+            self._holds.pop(key, None)
+            self._update(key, False, held=False)
 
-        return expire
+        return end
 
     def as_dict(self) -> dict[str, Any]:
         return {

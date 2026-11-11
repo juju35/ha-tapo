@@ -59,6 +59,7 @@
         "data": {
           "scan_interval": "Aktualisierungsintervall (s)",
           "onvif_events": "Erkennungsereignisse",
+          "detection_hold": "Haltezeit der Erkennungen (s)",
           "motion_timeout": "Sicherheitszeitlimit der Erkennungen (s)",
           "rtsp_transport": "RTSP-Transport",
           "extra_ffmpeg_arguments": "Zusätzliche FFmpeg-Argumente für Schnappschüsse"
@@ -66,6 +67,7 @@
         "data_description": {
           "scan_interval": "Wie oft die Einstellungen gelesen werden. Erkennungen sendet die Kamera unabhängig von diesem Intervall.",
           "onvif_events": "Sensoren für Bewegung, Person, Fahrzeug… aus den ONVIF-Ereignissen der Kamera (Port 2020).",
+          "detection_hold": "Eine Erkennung bleibt so lange aktiv, nachdem die Kamera sie beendet hat, damit sie sich bei Bewegung nicht alle paar Sekunden aus- und wieder einschaltet. 0, um der Kamera zu folgen.",
           "motion_timeout": "Eine Erkennung ohne Neuigkeiten seit dieser Zeit wird ausgeschaltet. 0, um sie aktiv zu lassen, bis die Kamera sie beendet.",
           "rtsp_transport": "TCP ist am zuverlässigsten.",
           "extra_ffmpeg_arguments": "Werden an den FFmpeg-Befehl für Schnappschüsse angehängt."

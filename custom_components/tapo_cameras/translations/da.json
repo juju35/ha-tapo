@@ -59,6 +59,7 @@
         "data": {
           "scan_interval": "Opdateringsinterval (s)",
           "onvif_events": "Detektionshændelser",
+          "detection_hold": "Holdetid for registreringer (s)",
           "motion_timeout": "Sikkerhedstimeout for detektioner (s)",
           "rtsp_transport": "RTSP-transport",
           "extra_ffmpeg_arguments": "Ekstra FFmpeg-argumenter til snapshots"
@@ -66,6 +67,7 @@
         "data_description": {
           "scan_interval": "Hvor ofte indstillingerne læses. Detektioner sendes af kameraet uanset dette interval.",
           "onvif_events": "Sensorer for bevægelse, person, køretøj… fra kameraets ONVIF-hændelser (port 2020).",
+          "detection_hold": "En registrering forbliver aktiv så længe efter, at kameraet har afsluttet den, så den ikke slukker og tænder hvert par sekunder, mens noget bevæger sig. 0 for at følge kameraet.",
           "motion_timeout": "En detektion uden nyt i så lang tid slås fra. 0 for at holde den aktiv, til kameraet afslutter den.",
           "rtsp_transport": "TCP er det mest pålidelige.",
           "extra_ffmpeg_arguments": "Tilføjes til FFmpeg-kommandoen, der tager snapshots."
