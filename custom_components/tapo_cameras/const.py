@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "tapo_cameras"
-VERSION: Final = "1.2.1"
+VERSION: Final = "1.2.2"
 
 CONF_CLOUD_PASSWORD: Final = "cloud_password"
 CONF_CONTROL_PORT: Final = "control_port"
@@ -120,6 +120,11 @@ ONVIF_PULL_GRACE: Final = 15
 # Minimum seconds between two pulls that came back empty at once.
 ONVIF_MIN_PULL_INTERVAL: Final = 1.0
 ONVIF_RETRY_BACKOFF: Final = (5, 15, 30, 60, 120, 300)
+# A pull the camera cuts (Tapo firmwares close the connection of a long pull instead of answering it
+# empty) is pulled again on the same subscription, up to this many times in a row.
+ONVIF_PULL_RETRIES: Final = 3
+# A long pull the camera cuts at its end is shortened, down to this.
+ONVIF_MIN_PULL_TIMEOUT: Final = 5.0
 ONVIF_SUBSCRIPTION_TTL: Final = timedelta(minutes=10)
 
 EVENT_TAPO: Final = f"{DOMAIN}_event"

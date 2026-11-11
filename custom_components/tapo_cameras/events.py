@@ -15,9 +15,10 @@ import logging
 import re
 import time
 from collections.abc import Callable
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 
+import aiohttp
 from homeassistant.core import CALLBACK_TYPE, HomeAssistant, callback
 from homeassistant.helpers.event import async_call_later
 from homeassistant.util import dt as dt_util
@@ -27,7 +28,9 @@ from .const import (
     EVENT_TAPO,
     ONVIF_MESSAGE_LIMIT,
     ONVIF_MIN_PULL_INTERVAL,
+    ONVIF_MIN_PULL_TIMEOUT,
     ONVIF_PULL_GRACE,
+    ONVIF_PULL_RETRIES,
     ONVIF_PULL_TIMEOUT,
     ONVIF_RETRY_BACKOFF,
     ONVIF_SUBSCRIPTION_TTL,
@@ -139,6 +142,10 @@ class OnvifEvents:
         self._timeouts: dict[str, CALLBACK_TYPE] = {}
         self._task: asyncio.Task | None = None
         self._lost = asyncio.Event()
+        # Seconds of a pull once shortened (the camera cuts long pulls); ONVIF_PULL_TIMEOUT until then.
+        self._pull_timeout: float | None = None
+        # The current subscription answered at least once.
+        self._answered = False
 
     @callback
     def async_add_listener(self, listener: Callable[[], None]) -> CALLBACK_TYPE:
@@ -176,6 +183,10 @@ class OnvifEvents:
         while True:
             camera = manager = None
             started = time.monotonic()
+            # A subscription that worked and then ends is replaced at once, its sensors staying
+            # available: they only turn unavailable when a new one can't be made.
+            quiet = self._answered and self.connected
+            self._answered = False
             try:
                 camera, manager = await self._subscribe()
                 service = manager.get_service()
@@ -187,15 +198,20 @@ class OnvifEvents:
                 await self._close(camera, manager)
                 raise
             except Exception as err:  # noqa: BLE001 - any failure of the camera or the library means "retry"
+                await self._close(camera, manager)
+                if self._answered:
+                    _LOGGER.debug("%s: event subscription lost (%s), subscribing again", self.host, err)
+                    continue
                 delay = ONVIF_RETRY_BACKOFF[min(failures, len(ONVIF_RETRY_BACKOFF) - 1)]
                 failures += 1
                 level = logging.WARNING if failures == 3 else logging.DEBUG
                 _LOGGER.log(level, "%s: events unavailable (%s), retrying in %s s", self.host, err, delay)
                 self._set_connected(False, str(err) or type(err).__name__)
-                await self._close(camera, manager)
                 await self._backoff(delay)
                 continue
             await self._close(camera, manager)
+            if self._answered or quiet:
+                continue
             self._set_connected(False, "subscription lost")
             # A subscription the camera drops right away: don't subscribe again in a tight loop.
             if time.monotonic() - started < ONVIF_SUBSCRIPTION_TTL.total_seconds():
@@ -219,12 +235,27 @@ class OnvifEvents:
         return camera, manager
 
     async def _pull(self, service: Any) -> None:
-        params = {"MessageLimit": ONVIF_MESSAGE_LIMIT, "Timeout": ONVIF_PULL_TIMEOUT}
-        # The camera answers within ONVIF_PULL_TIMEOUT; no answer at all means a dead connection.
-        deadline = ONVIF_PULL_TIMEOUT.total_seconds() + ONVIF_PULL_GRACE
+        cut = 0
         while not self._lost.is_set():
+            timeout = self._pull_timeout or ONVIF_PULL_TIMEOUT.total_seconds()
+            params = {"MessageLimit": ONVIF_MESSAGE_LIMIT, "Timeout": timedelta(seconds=timeout)}
             started = time.monotonic()
-            response = await asyncio.wait_for(service.PullMessages(params), deadline)
+            try:
+                # The camera answers within the timeout; no answer at all means a dead connection.
+                response = await asyncio.wait_for(service.PullMessages(params), timeout + ONVIF_PULL_GRACE)
+            except (aiohttp.ClientError, ConnectionError) as err:
+                # Cut by the camera: pulled again on the same subscription, a few times in a row.
+                cut += 1
+                if cut > ONVIF_PULL_RETRIES:
+                    raise
+                if time.monotonic() - started >= 0.8 * timeout and timeout > ONVIF_MIN_PULL_TIMEOUT:
+                    # Cut at the end of the wait: this camera doesn't hold a pull that long.
+                    self._pull_timeout = max(ONVIF_MIN_PULL_TIMEOUT, timeout / 2)
+                    _LOGGER.debug("%s: pull cut (%s), pulls of %s s now", self.host, err, self._pull_timeout)
+                await self._backoff(ONVIF_MIN_PULL_INTERVAL)
+                continue
+            cut = 0
+            self._answered = True
             messages = getattr(response, "NotificationMessage", None) or []
             for message in messages:
                 self.messages += 1

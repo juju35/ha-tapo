@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.2 (2026-11-11)
+
+### Fixes
+- Detection sensors flapping between off and unavailable every 20 s or so: Tapo firmwares cut the connection of a long event pull instead of answering it empty (`Server disconnected`), and each cut made a new subscription, the sensors unavailable meanwhile. A cut pull is pulled again on the same subscription (up to 3 times in a row), a pull cut at the end of its wait is shortened (20 s, then 10 s, down to 5 s), and a subscription that worked is replaced at once without the sensors turning unavailable: they only do when no new subscription can be made.
+
 ## 1.2.1 (2026-11-11)
 
 ### Fixes
