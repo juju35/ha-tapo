@@ -8,6 +8,7 @@ from datetime import timedelta
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock, patch
 
+import aiohttp
 import pytest
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
@@ -143,16 +144,86 @@ async def test_safety_timeout(hass: HomeAssistant, with_events: MockConfigEntry,
 
 
 async def test_subscription_loss_and_recovery(hass: HomeAssistant, with_events: MockConfigEntry, subscription) -> None:
+    """A subscription that worked is replaced at once, its sensors staying available."""
+    events = with_events.runtime_data.events
     await subscription.batches.put([message("tns1:RuleEngine/CellMotionDetector/Motion", "IsMotion", "true")])
     await hass.async_block_till_done()
+    changes = []
+    remove = events.async_add_listener(lambda: changes.append(events.connected))
     with patch.object(OnvifEvents, "_backoff", AsyncMock()) as backoff:
+        await subscription.batches.put(TimeoutError("subscription gone"))
+        await hass.async_block_till_done()
+        backoff.assert_not_awaited()
+    remove()
+    assert False not in changes
+    assert _state(hass, "event_subscription").state == "on"
+    assert _state(hass, "motion").state == "on"
+    subscription.manager.shutdown.assert_awaited()
+
+
+async def test_camera_down_makes_sensors_unavailable(
+    hass: HomeAssistant, with_events: MockConfigEntry, subscription
+) -> None:
+    """When no new subscription can be made (camera rebooting), the sensors turn unavailable."""
+    events = with_events.runtime_data.events
+    await subscription.batches.put([message("tns1:RuleEngine/CellMotionDetector/Motion", "IsMotion", "true")])
+    await hass.async_block_till_done()
+    calls = 0
+    changes = []
+    remove = events.async_add_listener(lambda: changes.append(events.connected))
+
+    async def subscribe(self):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise OSError("No route to host")
+        self._lost.clear()
+        return subscription.camera, subscription.manager
+
+    with (
+        patch.object(OnvifEvents, "_subscribe", subscribe),
+        patch.object(OnvifEvents, "_backoff", AsyncMock()) as backoff,
+    ):
         await subscription.batches.put(TimeoutError("camera rebooting"))
         await hass.async_block_till_done()
         backoff.assert_awaited_once_with(5)
-    # Back at once (the backoff is mocked): the sensors are available again, the old detection cleared.
-    assert _state(hass, "event_subscription").state == "on"
+    remove()
+    assert False in changes
+    assert events.connected
+    # The detection from before the loss is not known to have ended: cleared.
     assert _state(hass, "motion").state == "off"
-    subscription.manager.shutdown.assert_awaited()
+
+
+async def test_cut_pulls_retried_and_shortened(hass: HomeAssistant, with_events: MockConfigEntry, subscription) -> None:
+    """A camera that cuts long pulls: pulled again on the same subscription, then with a shorter timeout."""
+    events = with_events.runtime_data.events
+    changes = []
+    remove = events.async_add_listener(lambda: changes.append(events.connected))
+    clock = [1000.0]
+    service = subscription.manager.get_service.return_value
+    timeouts = []
+    real_pull = service.PullMessages.side_effect
+
+    async def pull(params):
+        timeouts.append(params["Timeout"].total_seconds())
+        if len(timeouts) <= 2:
+            clock[0] += params["Timeout"].total_seconds()  # cut at the end of the wait
+            raise aiohttp.ServerDisconnectedError
+        return await real_pull(params)
+
+    with (
+        patch("custom_components.tapo_cameras.events.time.monotonic", side_effect=lambda: clock[0]),
+        patch.object(OnvifEvents, "_backoff", AsyncMock()),
+    ):
+        service.PullMessages.side_effect = pull
+        # The current pull (started before) ends; the next ones are cut twice, then answered.
+        await subscription.batches.put([])
+        await subscription.batches.put([message("tns1:RuleEngine/CellMotionDetector/People", "IsPeople", "true")])
+        await hass.async_block_till_done()
+    remove()
+    assert timeouts[:3] == [20.0, 10.0, 5.0]
+    assert False not in changes
+    assert _state(hass, "person").state == "on"
 
 
 async def test_dead_connection_detected(hass: HomeAssistant, with_events: MockConfigEntry, subscription) -> None:
