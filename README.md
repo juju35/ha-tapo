@@ -22,7 +22,7 @@ Home Assistant integration for TP-Link Tapo cameras, fully local: live stream, p
 - **Events that survive reboots**: the camera's ONVIF event subscription is renewed before it expires and created again, with a backoff, when the camera drops it; a **Detection events** sensor shows whether the subscription is up
 - **Safety timeout**: a detection still on after 60 s without news (configurable) is switched off, for firmwares that never send the end of an event
 - **One request at a time** per camera: Tapo firmwares drop the session when two requests arrive together, so polling and changes share a queue
-- **One light request per refresh**: the settings are read with a single batched request, without the half of it this integration never uses; capabilities, network, SD card and presets are read every 10 minutes, after a change and after a new login only
+- **One light request per refresh**: the settings are read with a single batched request, without the half of it this integration never uses; capabilities, network, SD card and presets are read every 10 minutes, after a change and after a new login only, and so are the requests the camera does not support
 - **No flapping**: a setting the camera refuses for a moment (privacy mode, busy camera) keeps its last value for up to 10 minutes instead of turning its entity unavailable
 - **Snapshots shared**: one FFmpeg at a time per camera, a still reused for 5 s, and stills taken from the running stream when there is one, so dashboards don't use up the camera's two RTSP sessions
 - **Dead event connections detected**: a pull without any answer 15 s past its timeout restarts the subscription; an empty answer arriving at once is not pulled again for a second
@@ -144,7 +144,7 @@ data:
 
 ## How it works
 
-- Settings: the camera's local API on port 443, signed in as `admin` with the Tapo account password (the camera's own rule), through the `pytapo` library. Every refresh is one batched request (unused requests left out, slow ones every 10 minutes); every call goes through one queue per camera, run in the executor; a request that timed out is not retried at once, as it may still be running
+- Settings: the camera's local API on port 443, signed in as `admin` with the Tapo account password (the camera's own rule), through the `pytapo` library. Every refresh is one batched request (unused requests left out, slow and unsupported ones every 10 minutes); every call goes through one queue per camera, run in the executor; a request that timed out is not retried at once, as it may still be running
 - Stream: RTSP on port 554 with the camera account (`stream1` = HD, `stream2` = SD). Snapshots are taken from the running stream when there is one, so they don't use one of the camera's two stream slots
 - Detections: ONVIF pull point on port 2020 with the camera account, pulled every 20 s at most (the camera answers as soon as something happens), subscription renewed before it expires
 

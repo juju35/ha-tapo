@@ -44,6 +44,7 @@ async def async_get_config_entry_diagnostics(hass: HomeAssistant, entry: TapoCon
         "logins": coordinator.client.logins,
         # Requests whose last good answer is kept while they fail.
         "failing": sorted(coordinator.failing),
+        "unsupported": sorted(coordinator.unsupported),
         "state": async_redact_data(coordinator.data.raw if coordinator.data else {}, TO_REDACT),
         "events": coordinator.events.as_dict() if coordinator.events else None,
     }
