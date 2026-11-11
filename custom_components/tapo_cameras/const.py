@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "tapo_cameras"
-VERSION: Final = "1.2.0"
+VERSION: Final = "1.2.1"
 
 CONF_CLOUD_PASSWORD: Final = "cloud_password"
 CONF_CONTROL_PORT: Final = "control_port"

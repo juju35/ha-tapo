@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1 (2026-11-11)
+
+### Fixes
+- Detection sensors unavailable since 1.1.1: the ONVIF client was built in the executor, where its HTTP sessions find no event loop (`events unavailable (no running event loop)`), so the subscription never came up. Only its import runs in the executor now; the client is built in the event loop.
+
 ## 1.2.0 (2026-11-11)
 
 ### Improvements
