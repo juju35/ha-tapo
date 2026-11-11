@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+### Improvements
+- Lighter refreshes: the requests a camera does not support (floodlight, siren, white lamp… depending on the model), refused at a full refresh and never answered before, are left out of the refreshes in between and asked again every 10 minutes. The camera has less to process while it streams. Diagnostics list them under `unsupported`.
+
 ## 1.1.1 (2026-11-11)
 
 - Detection events: the ONVIF client is loaded and built outside Home Assistant's event loop, which no longer reports blocking calls (package metadata, WSDL files, certificates) at startup

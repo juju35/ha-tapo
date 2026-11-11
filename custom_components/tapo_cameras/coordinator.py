@@ -73,10 +73,16 @@ class TapoCoordinator(DataUpdateCoordinator[TapoData]):
         self._logins_seen = 0
         # Request → monotonic time it first failed, while the last good answer is kept.
         self._failing_since: dict[str, float] = {}
+        # Requests this camera does not support (never answered): asked again at full refreshes only.
+        self._unsupported: frozenset[str] = frozenset()
 
     @property
     def failing(self) -> list[str]:
         return list(self._failing_since)
+
+    @property
+    def unsupported(self) -> frozenset[str]:
+        return self._unsupported
 
     @callback
     def async_request_full_refresh(self) -> None:
@@ -91,7 +97,7 @@ class TapoCoordinator(DataUpdateCoordinator[TapoData]):
             or self.client.logins != self._logins_seen
             or now - self._full_at >= FULL_REFRESH_INTERVAL.total_seconds()
         )
-        omit = UNUSED_METHODS if full else UNUSED_METHODS | SLOW_METHODS
+        omit = UNUSED_METHODS if full else UNUSED_METHODS | SLOW_METHODS | self._unsupported
         try:
             raw = await self.client.async_get_state(omit)
         except TapoAuthError as err:
@@ -120,7 +126,24 @@ class TapoCoordinator(DataUpdateCoordinator[TapoData]):
             )
         if full:
             self._full_at, self._logins_seen = now, self.client.logins
+            self._unsupported = self._never_answered(raw, omit)
         return TapoData(raw=self._merge(raw, omit, now))
+
+    def _never_answered(self, raw: dict[str, list[Any]], omit: frozenset[str]) -> frozenset[str]:
+        """Requests refused now that never had an answer: features this camera lacks.
+
+        Usually half of the batch on a given model (floodlight, siren, white lamp…); left out of the
+        refreshes in between, the camera has less to process while it streams. A request that answered
+        once is kept (privacy mode and a busy camera refuse supported requests too).
+        """
+        before = self.data.raw if self.data is not None else {}
+        return frozenset(
+            method
+            for method, answers in raw.items()
+            if method not in omit
+            and not any(answer is not False for answer in answers)
+            and not any(answer is not False for answer in before.get(method, ()))
+        )
 
     def _merge(self, raw: dict[str, list[Any]], omit: frozenset[str], now: float) -> dict[str, list[Any]]:
         """Fill the requests not asked, or failing for a short while, with their last good answer."""

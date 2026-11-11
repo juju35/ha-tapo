@@ -46,6 +46,27 @@ async def test_slow_requests_asked_now_and_then(
     assert SLOW_METHODS & set(camera.state) <= camera.asked[-1]
 
 
+async def test_unsupported_requests_asked_at_full_refreshes_only(
+    hass: HomeAssistant, loaded: MockConfigEntry, camera: FakeCamera
+) -> None:
+    # The camera refuses a request it does not support (answered False), and one it supports for a moment.
+    camera.state["getFloodlightStatus"] = [False]
+    supported = next(m for m in camera.state if m not in SLOW_METHODS | UNUSED_METHODS and m != "getFloodlightStatus")
+    answer = camera.state[supported]
+    camera.state[supported] = [False]
+    with patch("custom_components.tapo_cameras.coordinator.monotonic", return_value=1e9):
+        await _refresh(hass, loaded)
+    await _refresh(hass, loaded)
+    assert "getFloodlightStatus" not in camera.asked[-1]
+    # A request that answered before is still asked: it comes back as soon as the camera answers.
+    assert supported in camera.asked[-1]
+    camera.state[supported] = answer
+    # The next full refresh asks it again.
+    with patch("custom_components.tapo_cameras.coordinator.monotonic", return_value=2e9):
+        await _refresh(hass, loaded)
+    assert "getFloodlightStatus" in camera.asked[-1]
+
+
 async def test_change_asks_everything_again(hass: HomeAssistant, loaded: MockConfigEntry, camera: FakeCamera) -> None:
     await _refresh(hass, loaded)
     switch = er.async_get(hass).async_get_entity_id("switch", DOMAIN, "aa:bb:cc:dd:ee:ff_automatic_reboot")
