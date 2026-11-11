@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.0 (2026-11-11)
+
+### Improvements
+- New option **Detection hold time** (30 s by default): a detection stays on this long after the camera ends it, and a new start in the meantime continues it. Tapo cameras end a detection and start it again every one to four seconds while something moves, so the sensors switched off and on as often and every start fired a `tapo_cameras_event`; now one movement is one detection and one event. 0 follows the camera as before.
+
 ## 1.2.2 (2026-11-11)
 
 ### Fixes

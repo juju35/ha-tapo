@@ -59,6 +59,7 @@
         "data": {
           "scan_interval": "Atsvaidzināšanas intervāls (s)",
           "onvif_events": "Noteikšanas notikumi",
+          "detection_hold": "Noteikšanu aiztures laiks (s)",
           "motion_timeout": "Noteikšanu drošības noildze (s)",
           "rtsp_transport": "RTSP transports",
           "extra_ffmpeg_arguments": "Papildu FFmpeg argumenti momentuzņēmumiem"
@@ -66,6 +67,7 @@
         "data_description": {
           "scan_interval": "Cik bieži tiek nolasīti iestatījumi. Noteikšanas sūta kamera neatkarīgi no šī intervāla.",
           "onvif_events": "Kustības, personas, transportlīdzekļa… sensori no kameras ONVIF notikumiem (ports 2020).",
+          "detection_hold": "Noteikšana paliek aktīva tik ilgi pēc tam, kad kamera to beigusi, lai tā neizslēgtos un neieslēgtos ik pēc dažām sekundēm, kamēr kaut kas kustas. 0, lai sekotu kamerai.",
           "motion_timeout": "Noteikšana bez jaunumiem tik ilgi tiek izslēgta. 0, lai tā paliktu aktīva, līdz kamera to beidz.",
           "rtsp_transport": "TCP ir visuzticamākais.",
           "extra_ffmpeg_arguments": "Tiek pievienoti FFmpeg komandai, kas uzņem momentuzņēmumus."

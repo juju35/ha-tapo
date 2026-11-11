@@ -19,12 +19,14 @@ from .api import TapoAuthError, TapoSuspendedError, classify
 from .const import (
     CONF_CLOUD_PASSWORD,
     CONF_CONTROL_PORT,
+    CONF_DETECTION_HOLD,
     CONF_EXTRA_FFMPEG_ARGS,
     CONF_MOTION_TIMEOUT,
     CONF_ONVIF_EVENTS,
     CONF_RTSP_TRANSPORT,
     CONTROL_USER,
     DEFAULT_CONTROL_PORT,
+    DEFAULT_DETECTION_HOLD,
     DEFAULT_MOTION_TIMEOUT,
     DEFAULT_RTSP_TRANSPORT,
     DEFAULT_SCAN_INTERVAL,
@@ -186,6 +188,9 @@ class TapoOptionsFlow(OptionsFlowWithReload):
                     CONF_SCAN_INTERVAL, default=options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
                 ): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL, max=MAX_SCAN_INTERVAL)),
                 vol.Required(CONF_ONVIF_EVENTS, default=options.get(CONF_ONVIF_EVENTS, True)): bool,
+                vol.Required(
+                    CONF_DETECTION_HOLD, default=options.get(CONF_DETECTION_HOLD, DEFAULT_DETECTION_HOLD)
+                ): vol.All(vol.Coerce(int), vol.Range(min=0, max=600)),
                 vol.Required(
                     CONF_MOTION_TIMEOUT, default=options.get(CONF_MOTION_TIMEOUT, DEFAULT_MOTION_TIMEOUT)
                 ): vol.All(vol.Coerce(int), vol.Range(min=0, max=3600)),

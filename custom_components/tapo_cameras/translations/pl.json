@@ -59,6 +59,7 @@
         "data": {
           "scan_interval": "Interwał odświeżania (s)",
           "onvif_events": "Zdarzenia wykrywania",
+          "detection_hold": "Czas podtrzymania wykryć (s)",
           "motion_timeout": "Limit bezpieczeństwa wykryć (s)",
           "rtsp_transport": "Transport RTSP",
           "extra_ffmpeg_arguments": "Dodatkowe argumenty FFmpeg dla zrzutów"
@@ -66,6 +67,7 @@
         "data_description": {
           "scan_interval": "Jak często odczytywane są ustawienia. Wykrycia są wysyłane przez kamerę niezależnie od tego interwału.",
           "onvif_events": "Czujniki ruchu, osoby, pojazdu… ze zdarzeń ONVIF kamery (port 2020).",
+          "detection_hold": "Wykrycie pozostaje aktywne przez ten czas po zakończeniu go przez kamerę, aby nie wyłączało się i nie włączało co kilka sekund, gdy coś się porusza. 0, aby podążać za kamerą.",
           "motion_timeout": "Wykrycie bez nowych informacji przez ten czas zostaje wyłączone. 0, aby było aktywne, dopóki kamera go nie zakończy.",
           "rtsp_transport": "TCP jest najbardziej niezawodny.",
           "extra_ffmpeg_arguments": "Dodawane do polecenia FFmpeg wykonującego zrzuty."

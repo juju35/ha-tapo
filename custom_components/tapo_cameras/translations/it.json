@@ -59,6 +59,7 @@
         "data": {
           "scan_interval": "Intervallo di aggiornamento (s)",
           "onvif_events": "Eventi di rilevamento",
+          "detection_hold": "Tempo di mantenimento dei rilevamenti (s)",
           "motion_timeout": "Timeout di sicurezza dei rilevamenti (s)",
           "rtsp_transport": "Trasporto RTSP",
           "extra_ffmpeg_arguments": "Argomenti FFmpeg aggiuntivi per le istantanee"
@@ -66,6 +67,7 @@
         "data_description": {
           "scan_interval": "Ogni quanto vengono lette le impostazioni. I rilevamenti sono inviati dalla telecamera, indipendentemente da questo intervallo.",
           "onvif_events": "Sensori di movimento, persona, veicolo… dagli eventi ONVIF della telecamera (porta 2020).",
+          "detection_hold": "Un rilevamento resta attivo per questo tempo dopo che la telecamera lo ha terminato, così non si spegne e riaccende ogni pochi secondi mentre qualcosa si muove. 0 per seguire la telecamera.",
           "motion_timeout": "Un rilevamento senza novità da questo tempo viene disattivato. 0 per lasciarlo attivo finché la telecamera non lo termina.",
           "rtsp_transport": "TCP è il più affidabile.",
           "extra_ffmpeg_arguments": "Aggiunti al comando FFmpeg che scatta le istantanee."

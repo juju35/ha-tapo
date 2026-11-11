@@ -59,6 +59,7 @@
         "data": {
           "scan_interval": "Uppdateringsintervall (s)",
           "onvif_events": "Detekteringshändelser",
+          "detection_hold": "Hålltid för detekteringar (s)",
           "motion_timeout": "Säkerhetstidsgräns för detekteringar (s)",
           "rtsp_transport": "RTSP-transport",
           "extra_ffmpeg_arguments": "Extra FFmpeg-argument för stillbilder"
@@ -66,6 +67,7 @@
         "data_description": {
           "scan_interval": "Hur ofta inställningarna läses. Detekteringar skickas av kameran oavsett detta intervall.",
           "onvif_events": "Sensorer för rörelse, person, fordon… från kamerans ONVIF-händelser (port 2020).",
+          "detection_hold": "En detektering förblir aktiv så länge efter att kameran avslutat den, så att den inte slås av och på med några sekunders mellanrum medan något rör sig. 0 för att följa kameran.",
           "motion_timeout": "En detektering utan nyheter så länge stängs av. 0 för att låta den vara aktiv tills kameran avslutar den.",
           "rtsp_transport": "TCP är mest pålitligt.",
           "extra_ffmpeg_arguments": "Läggs till i FFmpeg-kommandot som tar stillbilder."

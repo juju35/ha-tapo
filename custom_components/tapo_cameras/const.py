@@ -6,12 +6,13 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "tapo_cameras"
-VERSION: Final = "1.2.2"
+VERSION: Final = "1.3.0"
 
 CONF_CLOUD_PASSWORD: Final = "cloud_password"
 CONF_CONTROL_PORT: Final = "control_port"
 CONF_RTSP_TRANSPORT: Final = "rtsp_transport"
 CONF_MOTION_TIMEOUT: Final = "motion_timeout"
+CONF_DETECTION_HOLD: Final = "detection_hold"
 CONF_ONVIF_EVENTS: Final = "onvif_events"
 CONF_EXTRA_FFMPEG_ARGS: Final = "extra_ffmpeg_arguments"
 
@@ -22,6 +23,8 @@ DEFAULT_SCAN_INTERVAL: Final = 30
 MIN_SCAN_INTERVAL: Final = 10
 MAX_SCAN_INTERVAL: Final = 600
 DEFAULT_MOTION_TIMEOUT: Final = 60
+# Seconds a detection stays on after the camera ends it (cameras end and start again every few seconds).
+DEFAULT_DETECTION_HOLD: Final = 30
 DEFAULT_RTSP_TRANSPORT: Final = "tcp"
 RTSP_TRANSPORTS: Final = ["tcp", "udp", "udp_multicast", "http"]
 # Stream quality → RTSP path.

@@ -20,6 +20,7 @@ Home Assistant integration for TP-Link Tapo cameras, fully local: live stream, p
 - **Privacy mode shown**: the camera displays a large crossed-out camera instead of a black or frozen picture, and its live stream stops until privacy mode is turned off
 - **Detection sensors created at setup**, for every detection the camera supports (motion, person, vehicle, pet, line crossing, tamper, baby crying, barking, meowing, glass break, package), before any event happens; a detection the camera reports and this integration doesn't know yet gets a sensor too
 - **Events that survive reboots**: the camera's ONVIF event subscription is renewed before it expires and created again, with a backoff, when the camera drops it; a pull the camera cuts is pulled again (and shortened if the camera doesn't hold long pulls), and a lost subscription is replaced at once, so the sensors only turn unavailable when the camera can't be reached; a **Detection events** sensor shows whether the subscription is up
+- **Steady detections**: a detection stays on 30 s (configurable) after the camera ends it, so a movement is one detection and one event instead of an on/off every few seconds
 - **Safety timeout**: a detection still on after 60 s without news (configurable) is switched off, for firmwares that never send the end of an event
 - **One request at a time** per camera: Tapo firmwares drop the session when two requests arrive together, so polling and changes share a queue
 - **One light request per refresh**: the settings are read with a single batched request, without the half of it this integration never uses; capabilities, network, SD card and presets are read every 10 minutes, after a change and after a new login only, and so are the requests the camera does not support
@@ -86,6 +87,7 @@ Copy `custom_components/tapo_cameras/` to `/config/custom_components/tapo_camera
 |---|---|---|
 | Refresh interval | 30 s | How often the settings are read. Detections are pushed by the camera, whatever this interval |
 | Detection events | on | Detection sensors from the camera's ONVIF events |
+| Detection hold time | 30 s | A detection stays on this long after the camera ends it (cameras end and start again every few seconds while something moves); 0 to follow the camera |
 | Detection safety timeout | 60 s | A detection without news for this long is switched off; 0 to wait for the camera |
 | RTSP transport | TCP | TCP, UDP, UDP multicast or HTTP |
 | Extra FFmpeg arguments | — | Added to the FFmpeg command that takes snapshots |

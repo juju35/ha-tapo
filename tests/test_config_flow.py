@@ -12,6 +12,7 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 from custom_components.tapo_cameras.const import (
     CONF_CLOUD_PASSWORD,
     CONF_CONTROL_PORT,
+    CONF_DETECTION_HOLD,
     CONF_EXTRA_FFMPEG_ARGS,
     CONF_MOTION_TIMEOUT,
     CONF_ONVIF_EVENTS,
@@ -112,6 +113,7 @@ async def test_options(hass: HomeAssistant, loaded: MockConfigEntry) -> None:
     options = {
         CONF_SCAN_INTERVAL: 60,
         CONF_ONVIF_EVENTS: False,
+        CONF_DETECTION_HOLD: 20,
         CONF_MOTION_TIMEOUT: 30,
         CONF_RTSP_TRANSPORT: "udp",
         CONF_EXTRA_FFMPEG_ARGS: "",
@@ -120,4 +122,5 @@ async def test_options(hass: HomeAssistant, loaded: MockConfigEntry) -> None:
     assert result["type"] is FlowResultType.CREATE_ENTRY
     await hass.async_block_till_done()
     assert loaded.options[CONF_SCAN_INTERVAL] == 60
+    assert loaded.options[CONF_DETECTION_HOLD] == 20
     assert loaded.runtime_data.update_interval.total_seconds() == 60

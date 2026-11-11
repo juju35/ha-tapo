@@ -59,6 +59,7 @@
         "data": {
           "scan_interval": "Verversingsinterval (s)",
           "onvif_events": "Detectiegebeurtenissen",
+          "detection_hold": "Vasthoudtijd van detecties (s)",
           "motion_timeout": "Veiligheidstime-out van detecties (s)",
           "rtsp_transport": "RTSP-transport",
           "extra_ffmpeg_arguments": "Extra FFmpeg-argumenten voor snapshots"
@@ -66,6 +67,7 @@
         "data_description": {
           "scan_interval": "Hoe vaak de instellingen worden gelezen. Detecties worden door de camera verstuurd, ongeacht dit interval.",
           "onvif_events": "Sensoren voor beweging, persoon, voertuig… uit de ONVIF-gebeurtenissen van de camera (poort 2020).",
+          "detection_hold": "Een detectie blijft zo lang aan nadat de camera ze beëindigt, zodat ze niet om de paar seconden uit en weer aan gaat zolang er iets beweegt. 0 om de camera te volgen.",
           "motion_timeout": "Een detectie zonder nieuws gedurende deze tijd wordt uitgezet. 0 om hem actief te laten tot de camera hem beëindigt.",
           "rtsp_transport": "TCP is het betrouwbaarst.",
           "extra_ffmpeg_arguments": "Toegevoegd aan de FFmpeg-opdracht die snapshots maakt."

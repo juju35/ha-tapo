@@ -59,6 +59,7 @@
         "data": {
           "scan_interval": "Interval de reîmprospătare (s)",
           "onvif_events": "Evenimente de detecție",
+          "detection_hold": "Durata de menținere a detecțiilor (s)",
           "motion_timeout": "Timp de siguranță al detecțiilor (s)",
           "rtsp_transport": "Transport RTSP",
           "extra_ffmpeg_arguments": "Argumente FFmpeg suplimentare pentru capturi"
@@ -66,6 +67,7 @@
         "data_description": {
           "scan_interval": "Cât de des sunt citite setările. Detecțiile sunt trimise de cameră, indiferent de acest interval.",
           "onvif_events": "Senzori de mișcare, persoană, vehicul… din evenimentele ONVIF ale camerei (portul 2020).",
+          "detection_hold": "O detecție rămâne activă atât timp după ce camera o încheie, ca să nu se oprească și să pornească la câteva secunde cât timp ceva se mișcă. 0 pentru a urma camera.",
           "motion_timeout": "O detecție fără noutăți atâta timp este oprită. 0 pentru a o lăsa activă până când camera o încheie.",
           "rtsp_transport": "TCP este cel mai fiabil.",
           "extra_ffmpeg_arguments": "Adăugate la comanda FFmpeg care face capturile."

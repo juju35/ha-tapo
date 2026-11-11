@@ -59,6 +59,7 @@
         "data": {
           "scan_interval": "Interval obnovenia (s)",
           "onvif_events": "Udalosti detekcie",
+          "detection_hold": "Čas podržania detekcií (s)",
           "motion_timeout": "Bezpečnostný časový limit detekcií (s)",
           "rtsp_transport": "Prenos RTSP",
           "extra_ffmpeg_arguments": "Ďalšie argumenty FFmpeg pre snímky"
@@ -66,6 +67,7 @@
         "data_description": {
           "scan_interval": "Ako často sa čítajú nastavenia. Detekcie posiela kamera bez ohľadu na tento interval.",
           "onvif_events": "Senzory pohybu, osoby, vozidla… z udalostí ONVIF kamery (port 2020).",
+          "detection_hold": "Detekcia zostane aktívna tento čas po tom, čo ju kamera ukončí, aby sa nevypínala a nezapínala každých pár sekúnd, kým sa niečo hýbe. 0 na sledovanie kamery.",
           "motion_timeout": "Detekcia bez nových správ počas tohto času sa vypne. 0 = ponechať aktívnu, kým ju kamera neukončí.",
           "rtsp_transport": "TCP je najspoľahlivejší.",
           "extra_ffmpeg_arguments": "Pridajú sa k príkazu FFmpeg, ktorý zhotovuje snímky."

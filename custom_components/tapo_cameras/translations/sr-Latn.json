@@ -59,6 +59,7 @@
         "data": {
           "scan_interval": "Interval osvežavanja (s)",
           "onvif_events": "Događaji detekcije",
+          "detection_hold": "Vreme zadržavanja detekcija (s)",
           "motion_timeout": "Sigurnosno vreme isteka detekcija (s)",
           "rtsp_transport": "RTSP transport",
           "extra_ffmpeg_arguments": "Dodatni FFmpeg argumenti za snimke"
@@ -66,6 +67,7 @@
         "data_description": {
           "scan_interval": "Koliko često se čitaju podešavanja. Detekcije šalje kamera, bez obzira na ovaj interval.",
           "onvif_events": "Senzori pokreta, osobe, vozila… iz ONVIF događaja kamere (port 2020).",
+          "detection_hold": "Detekcija ostaje aktivna toliko vremena nakon što je kamera završi, da se ne bi gasila i palila na svakih nekoliko sekundi dok se nešto kreće. 0 za praćenje kamere.",
           "motion_timeout": "Detekcija bez novosti ovoliko vremena se isključuje. 0 da ostane aktivna dok je kamera ne završi.",
           "rtsp_transport": "TCP je najpouzdaniji.",
           "extra_ffmpeg_arguments": "Dodaju se FFmpeg komandi koja pravi snimke."
