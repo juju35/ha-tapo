@@ -100,6 +100,14 @@ def parse_message(message: Any) -> list[tuple[str, bool]]:
     return found
 
 
+def _onvif_camera(host: str, port: int, username: str, password: str) -> Any:
+    """The ONVIF client, in the executor: importing it reads package metadata and building it lists the
+    WSDL files and loads the system certificates, all blocking calls."""
+    from onvif import ONVIFCamera  # noqa: PLC0415 - heavy import, only when events are enabled
+
+    return ONVIFCamera(host, port, username, password)
+
+
 class OnvifEvents:
     """Pull point subscription of one camera, with its detection states."""
 
@@ -197,9 +205,9 @@ class OnvifEvents:
         await asyncio.sleep(delay)
 
     async def _subscribe(self) -> tuple[Any, Any]:
-        from onvif import ONVIFCamera  # noqa: PLC0415 - heavy import, only when events are enabled
-
-        camera = ONVIFCamera(self.host, self._port, self._username, self._password)
+        camera = await self._hass.async_add_executor_job(
+            _onvif_camera, self.host, self._port, self._username, self._password
+        )
         try:
             await camera.update_xaddrs()
             self._lost.clear()

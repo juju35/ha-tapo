@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import threading
 from datetime import timedelta
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -18,6 +19,9 @@ from custom_components.tapo_cameras.const import CONF_MOTION_TIMEOUT, CONF_ONVIF
 from custom_components.tapo_cameras.events import OnvifEvents, parse_message
 
 from .conftest import FakeCamera
+
+# The real subscription, before the autouse no_onvif fixture replaces it.
+REAL_SUBSCRIBE = OnvifEvents._subscribe
 
 
 def message(topic: str, name: str, value: str) -> SimpleNamespace:
@@ -185,3 +189,21 @@ async def test_empty_answers_do_not_spin(hass: HomeAssistant, with_events: MockC
         with pytest.raises(asyncio.CancelledError):
             await events._task
     assert waits == [1.0, 1.0, 1.0]
+
+
+async def test_onvif_client_built_in_executor(hass: HomeAssistant) -> None:
+    """The ONVIF client is imported and built in the executor (blocking file and certificate reads)."""
+    events = OnvifEvents(hass, "192.168.1.15", 2020, "camuser", "campass", 60, lambda: None)
+    camera = MagicMock(update_xaddrs=AsyncMock(), create_pullpoint_manager=AsyncMock(return_value="manager"))
+    loop_thread = threading.get_ident()
+    threads = []
+
+    def build(*args):
+        threads.append((threading.get_ident(), args))
+        return camera
+
+    with patch("custom_components.tapo_cameras.events._onvif_camera", build):
+        assert await REAL_SUBSCRIBE(events) == (camera, "manager")
+    assert threads[0][0] != loop_thread
+    assert threads[0][1] == ("192.168.1.15", 2020, "camuser", "campass")
+    camera.update_xaddrs.assert_awaited_once()
