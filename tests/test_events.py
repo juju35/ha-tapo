@@ -191,19 +191,28 @@ async def test_empty_answers_do_not_spin(hass: HomeAssistant, with_events: MockC
     assert waits == [1.0, 1.0, 1.0]
 
 
-async def test_onvif_client_built_in_executor(hass: HomeAssistant) -> None:
-    """The ONVIF client is imported and built in the executor (blocking file and certificate reads)."""
+async def test_onvif_client_imported_in_executor_built_in_loop(hass: HomeAssistant) -> None:
+    """The ONVIF client is imported in the executor (blocking file and certificate reads) and built in
+    the event loop, which its HTTP sessions need."""
+    from onvif import ONVIFCamera  # noqa: PLC0415
+
     events = OnvifEvents(hass, "192.168.1.15", 2020, "camuser", "campass", 60, lambda: None)
-    camera = MagicMock(update_xaddrs=AsyncMock(), create_pullpoint_manager=AsyncMock(return_value="manager"))
     loop_thread = threading.get_ident()
-    threads = []
+    imported = []
 
-    def build(*args):
-        threads.append((threading.get_ident(), args))
-        return camera
+    def import_class():
+        imported.append(threading.get_ident())
+        return ONVIFCamera
 
-    with patch("custom_components.tapo_cameras.events._onvif_camera", build):
-        assert await REAL_SUBSCRIBE(events) == (camera, "manager")
-    assert threads[0][0] != loop_thread
-    assert threads[0][1] == ("192.168.1.15", 2020, "camuser", "campass")
-    camera.update_xaddrs.assert_awaited_once()
+    with (
+        patch("custom_components.tapo_cameras.events._onvif_class", import_class),
+        patch.object(ONVIFCamera, "update_xaddrs", AsyncMock()),
+        patch.object(ONVIFCamera, "create_pullpoint_manager", AsyncMock(return_value="manager")),
+    ):
+        camera, manager = await REAL_SUBSCRIBE(events)
+    try:
+        assert imported and imported[0] != loop_thread
+        assert isinstance(camera, ONVIFCamera)
+        assert manager == "manager"
+    finally:
+        await camera.close()

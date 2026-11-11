@@ -100,12 +100,13 @@ def parse_message(message: Any) -> list[tuple[str, bool]]:
     return found
 
 
-def _onvif_camera(host: str, port: int, username: str, password: str) -> Any:
-    """The ONVIF client, in the executor: importing it reads package metadata and building it lists the
-    WSDL files and loads the system certificates, all blocking calls."""
+def _onvif_class() -> Any:
+    """The ONVIF client class, imported in the executor: the import reads package metadata, lists the
+    WSDL files and loads the system certificates, all blocking calls. Building it needs the event
+    loop (its HTTP sessions), so that part stays in the loop."""
     from onvif import ONVIFCamera  # noqa: PLC0415 - heavy import, only when events are enabled
 
-    return ONVIFCamera(host, port, username, password)
+    return ONVIFCamera
 
 
 class OnvifEvents:
@@ -205,9 +206,8 @@ class OnvifEvents:
         await asyncio.sleep(delay)
 
     async def _subscribe(self) -> tuple[Any, Any]:
-        camera = await self._hass.async_add_executor_job(
-            _onvif_camera, self.host, self._port, self._username, self._password
-        )
+        onvif_camera = await self._hass.async_add_executor_job(_onvif_class)
+        camera = onvif_camera(self.host, self._port, self._username, self._password)
         try:
             await camera.update_xaddrs()
             self._lost.clear()
