@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1 (2026-11-11)
+
+- Detection events: the ONVIF client is loaded and built outside Home Assistant's event loop, which no longer reports blocking calls (package metadata, WSDL files, certificates) at startup
+
 ## 1.1.0 (2026-11-11)
 
 - Privacy mode: the camera shows a large crossed-out camera instead of a black or frozen picture; the live stream stops and comes back when privacy mode is turned off. The camera entity stays on, with a `privacy_mode` attribute
