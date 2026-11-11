@@ -33,6 +33,7 @@ Home Assistant integration for TP-Link Tapo cameras, fully local: live stream, p
 - Selects: motion, person, vehicle, pet, package, baby crying, barking, meowing, glass break and tamper detection (off / low / normal / high), night vision, day/night mode, light frequency, presets, stream quality
 - Numbers: speaker and microphone volume, motion sensitivity, spotlight intensity, step of the move buttons
 - Buttons: reboot, move up / down / left / right, calibrate, format SD card (disabled by default)
+- **Speaker**: a media player that plays sounds, files and text-to-speech on the camera, over its two-way audio channel; its volume is the camera's speaker volume
 - Siren (the camera's alarm), spotlight and floodlight lights, firmware update entity
 - Sensors: Wi-Fi signal, SD card status, free space and size; Wi-Fi network, connection type and IP address (disabled by default)
 - Actions to pan/tilt by an angle and to go to, save or delete a preset
@@ -45,7 +46,7 @@ Home Assistant integration for TP-Link Tapo cameras, fully local: live stream, p
 
 - Home Assistant 2025.8 or newer
 - In the Tapo app: **Third-Party Compatibility** turned on (under **Me**), and a **camera account** created in the camera's **Advanced Settings → Camera Account**
-- From Home Assistant, the camera must be reachable on ports **443** (settings), **554** (RTSP stream) and **2020** (ONVIF events). These are local ports: never forward them on your router
+- From Home Assistant, the camera must be reachable on ports **443** (settings), **554** (RTSP stream), **2020** (ONVIF events) and **8800** (speaker). These are local ports: never forward them on your router
 - Use only one integration per camera: the camera accepts few simultaneous connections
 
 ## Installation
@@ -100,8 +101,22 @@ The camera entity is named after the camera; the others are named after what the
 | `binary_sensor.<name>_motion`, `_person`, `_vehicle`… | From the event subscription; unavailable only while it is down; attribute `last_change` |
 | `binary_sensor.<name>_detection_events` | Subscription state; attributes `last_error`, `messages` |
 | `select.<name>_<type>_detection` | `off`, `low`, `normal`, `high` |
+| `media_player.<name>_speaker` | Plays on the camera's speaker (`media_player.play_media`, `tts.speak`, media browser); `playing` while it talks; volume = speaker volume |
 | `select.<name>_preset` | Moves to the chosen preset; the state stays unknown (the camera has no current preset) |
 | `number.<name>_move_step` | Degrees of the move buttons (15 by default), kept by Home Assistant |
+
+### Talking through the camera
+
+```yaml
+action: tts.speak
+target:
+  entity_id: tts.google_translate_en_com
+data:
+  media_player_entity_id: media_player.living_room_speaker
+  message: Someone is at the door
+```
+
+Any audio Home Assistant can read works too (`media_player.play_media` with a media-source item or a URL). The audio is converted by FFmpeg to the camera's format (G.711 A-law, 8 kHz mono) and sent in real time; a new sound replaces the one playing. Not possible while privacy mode is on.
 
 ### Event `tapo_cameras_event`
 
@@ -146,6 +161,7 @@ data:
 
 - Settings: the camera's local API on port 443, signed in as `admin` with the Tapo account password (the camera's own rule), through the `pytapo` library. Every refresh is one batched request (unused requests left out, slow ones every 10 minutes); every call goes through one queue per camera, run in the executor; a request that timed out is not retried at once, as it may still be running
 - Stream: RTSP on port 554 with the camera account (`stream1` = HD, `stream2` = SD). Snapshots are taken from the running stream when there is one, so they don't use one of the camera's two stream slots
+- Speaker: the camera's media port 8800 (the one of its own app), signed in with the Tapo account password; a "talk" session receiving G.711 A-law in an MPEG transport stream, paced in real time
 - Detections: ONVIF pull point on port 2020 with the camera account, pulled every 20 s at most (the camera answers as soon as something happens), subscription renewed before it expires
 
 ## Development

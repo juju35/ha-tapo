@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0 (2026-11-11)
+
+- Speaker: a media player per camera plays sounds, files, media and text-to-speech (`tts.speak`) on the camera's speaker, over its two-way audio channel (port 8800); its volume is the camera's speaker volume. One sound at a time, stopped with **Stop**; refused in privacy mode
+
 ## 1.1.0 (2026-11-11)
 
 - Privacy mode: the camera shows a large crossed-out camera instead of a black or frozen picture; the live stream stops and comes back when privacy mode is turned off. The camera entity stays on, with a `privacy_mode` attribute

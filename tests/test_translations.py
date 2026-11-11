@@ -94,13 +94,24 @@ def test_entity_names_not_translated(language: str):
 
 def test_every_translation_key_is_used() -> None:
     """Each entity translation key of en.json belongs to an entity, and the other way round."""
-    from custom_components.tapo_cameras import binary_sensor, button, light, number, select, sensor, siren, switch
+    from custom_components.tapo_cameras import (
+        binary_sensor,
+        button,
+        light,
+        media_player,
+        number,
+        select,
+        sensor,
+        siren,
+        switch,
+    )
 
     english = json.loads((TRANSLATIONS / "en.json").read_text(encoding="utf-8"))["entity"]
     used = {
         "binary_sensor": {*binary_sensor.DETECTIONS, "detection", binary_sensor.SUBSCRIPTION.translation_key},
         "button": {d.translation_key for d in button.BUTTONS if d.translation_key},
         "light": {d.translation_key for d in light.LIGHTS},
+        "media_player": {media_player.SPEAKER.translation_key},
         "number": {d.translation_key for d in number.NUMBERS} | {number.MOVE_ANGLE.translation_key},
         "select": {
             d.translation_key for d in (*select.DETECTIONS, *select.MODES, select.PRESET, select.STREAM_QUALITY)

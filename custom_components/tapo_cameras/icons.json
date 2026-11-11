@@ -75,6 +75,11 @@
         "default": "mdi:light-flood-down"
       }
     },
+    "media_player": {
+      "speaker": {
+        "default": "mdi:speaker"
+      }
+    },
     "number": {
       "speaker_volume": {
         "default": "mdi:volume-high"
