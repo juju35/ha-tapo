@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.1 (2026-11-14)
+
+### Improvements
+- New integration icon: the Tapo wordmark under a PTZ camera on a Tapo-blue tile, with a pan/tilt badge, in the same style as the other integrations (source in `brand/icon.svg`).
+
 ## 1.3.0 (2026-11-11)
 
 ### Improvements
