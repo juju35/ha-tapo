@@ -87,3 +87,15 @@ async def test_diagnostics_hide_secrets(hass: HomeAssistant, loaded: MockConfigE
     for secret in ("cloud-secret", "cam-secret", "camuser", "192.168.1.15", "AA-BB-CC-DD-EE-FF", "Home"):
         assert secret not in text, secret
     assert diagnostics["state"]["getLedStatus"] == [{"led": {"config": {"enabled": "on"}}}]
+
+
+async def test_diagnostics_hide_the_host_in_the_event_error(hass: HomeAssistant, loaded: MockConfigEntry) -> None:
+    class Events:
+        @staticmethod
+        def as_dict() -> dict[str, str]:
+            return {"last_error": "Cannot connect to host 192.168.1.15:2020 ssl:default"}
+
+    loaded.runtime_data.events = Events()
+    diagnostics = await async_get_config_entry_diagnostics(hass, loaded)
+    assert "192.168.1.15" not in str(diagnostics)
+    assert diagnostics["events"]["last_error"] == "Cannot connect to host **REDACTED**:2020 ssl:default"
