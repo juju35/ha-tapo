@@ -11,7 +11,7 @@
 <p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-tapo/main/custom_components/tapo_cameras/brand/icon.png" alt="Tapo Cameras" width="120"></p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/juju35/ha-tapo/main/images/tapo.svg" alt="Tapo" height="36">
+  <a href="https://www.tapo.com/"><img src="https://raw.githubusercontent.com/juju35/ha-tapo/main/images/tapo.svg" alt="Tapo" height="36"></a>
 </p>
 
 Home Assistant integration for TP-Link Tapo cameras, fully local: live stream, privacy mode, pan/tilt and presets, detection settings, and motion, person, vehicle, pet… sensors that exist from the start and come back on their own after a camera reboot.

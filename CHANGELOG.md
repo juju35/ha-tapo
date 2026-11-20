@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.2 - 2026-11-20
+
+### Fixes
+- **Diagnostics**: the last ONVIF event error is the library's own text, which can carry the camera's address; it is now redacted like the host of the entry.
+
 ## 1.3.1 (2026-11-14)
 
 ### Improvements

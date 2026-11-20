@@ -46,5 +46,12 @@ async def async_get_config_entry_diagnostics(hass: HomeAssistant, entry: TapoCon
         "failing": sorted(coordinator.failing),
         "unsupported": sorted(coordinator.unsupported),
         "state": async_redact_data(coordinator.data.raw if coordinator.data else {}, TO_REDACT),
-        "events": coordinator.events.as_dict() if coordinator.events else None,
+        "events": _redact_host(coordinator.events.as_dict(), entry.data[CONF_HOST]) if coordinator.events else None,
     }
+
+
+def _redact_host(events: dict[str, Any], host: str) -> dict[str, Any]:
+    """The last ONVIF error is the library's text, which may carry the camera's address (an aiohttp URL)."""
+    if isinstance(error := events.get("last_error"), str) and host:
+        events = {**events, "last_error": error.replace(host, "**REDACTED**")}
+    return events
