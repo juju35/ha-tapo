@@ -46,6 +46,14 @@ Home Assistant integration for TP-Link Tapo cameras, fully local: live stream, p
 - **Diagnostics** with personal data redacted
 - English, French, German, Spanish, Italian, Dutch, Portuguese (European and Brazilian), Polish, Serbian (Cyrillic and Latin), Romanian, Danish, Swedish, Bulgarian, Russian, Ukrainian, Hungarian, Slovak, Czech, Slovenian, Latvian and Greek
 
+## Screenshots
+
+Tapo cameras shown by [Camera](https://github.com/juju35/ha-camera): live streams, the **HD / SD** switch driving each camera's stream quality, the privacy switch and the pan and tilt buttons, all found on each camera's device.
+
+| Light | Dark |
+|---|---|
+| <img src="https://raw.githubusercontent.com/juju35/ha-tapo/main/screenshots/camera-card.png" alt="Tapo cameras in the Camera card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-tapo/main/screenshots/camera-card-dark.png" alt="Tapo cameras in the Camera card, dark theme" width="400"> |
+
 ## Prerequisites
 
 - Home Assistant 2025.8 or newer
