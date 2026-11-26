@@ -1,6 +1,7 @@
 {
   "domain": "tapo_cameras",
   "name": "Tapo Cameras",
+  "categories": ["security_safety.cameras"],
   "codeowners": [
     "@juju35"
   ],
