@@ -52,7 +52,7 @@ Tapo cameras shown by [Camera](https://github.com/juju35/ha-camera): live stream
 
 | Light | Dark |
 |---|---|
-| <img src="https://raw.githubusercontent.com/juju35/ha-tapo/main/screenshots/camera-card.png" alt="Tapo cameras in the Camera card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-tapo/main/screenshots/camera-card-dark.png" alt="Tapo cameras in the Camera card, dark theme" width="400"> |
+| <img src="https://raw.githubusercontent.com/juju35/ha-camera/main/screenshots/card-ptz.png" alt="Tapo cameras in the Camera card" width="400"> | <img src="https://raw.githubusercontent.com/juju35/ha-camera/main/screenshots/card-ptz-dark.png" alt="Tapo cameras in the Camera card, dark theme" width="400"> |
 
 ## Prerequisites
 
